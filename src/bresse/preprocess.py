@@ -1,6 +1,34 @@
 import chess.pgn
 
 
+def preprocess_game(game: chess.pgn.Game):
+    """
+    Preprocess a game to be used as prompt for LLM
+
+    Args:
+        game (chess.pgn.Game): Game (pgn) to preprocess pgn text (str)
+
+    Returns:
+        str: Preprocessed game
+    """
+    str_game = str(game)
+    list_moves = list(game.mainline())
+    length_moves = len(list_moves)
+    trait = length_moves % 2 == 0
+
+    # Delete at end the '1-0' if exist (for LLM predict next move)
+    length_result = len(game.headers['Result'])
+    str_game = str_game[:-length_result]
+
+    # If trait is for White, need to add number of move
+    # Allow to add number without intervention of LLM
+    if trait:
+        count_move = length_moves // 2 + 1
+        str_game += f"{count_move}. "
+
+    return str_game
+
+
 def game_to_board(game: chess.pgn.Game):
     """Get Board from pgn party"""
     board = chess.Board()
