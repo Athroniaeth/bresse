@@ -1,23 +1,37 @@
+import io
 from abc import abstractmethod, ABC
-from typing import List, final, Union
+from typing import List, final, Union, Iterable, Tuple
+
+import chess.pgn
 
 from bresse.identifiers.base import ModelId
+from bresse.output import Output
+from bresse.preprocess import preprocess_game
+from bresse.result import CounterResult
 
 
 class Model(ABC):
     list_models: List[ModelId] = []
 
     @abstractmethod
-    def _inference(self, prompt: str) -> str:
+    def _inference(self, game: chess.pgn.Game) -> Tuple[Output, CounterResult]:
         """Inference of the model on any string"""
         ...
 
     @final
-    def inference(self, prompt: str) -> str:
+    def inference(self, pgn: str) -> Tuple[Output, CounterResult]:
         """Inference the model on a given prompt"""
-        return self._inference(prompt)
+        io_pgn = io.StringIO(pgn)
+        # Check if pgn is a valid chess game
+        game = chess.pgn.read_game(io_pgn)
+
+        # Reduce inputs tokens for generate san
+        prompt_pgn = preprocess_game(game)
+
+        return self._inference(prompt_pgn)
 
     def _get_identifier_str(self, model_id: str) -> ModelId:
+        """Found the ModelId from id attributes."""
         generator = filter(lambda x: x.id == model_id, self.list_models)
         found_model = next(generator, None)
 
@@ -28,7 +42,7 @@ class Model(ABC):
         return found_model
 
 
-class ModelCloud(Model):
+class ModelCloud(Model, ABC):
     model: ModelId
 
     def __init__(self, model_id: Union[str, ModelId]):
@@ -46,7 +60,3 @@ class ModelCloud(Model):
 
         else:
             raise TypeError("Model must be either a string or a ModelId instance.")
-
-    @abstractmethod
-    def _inference(self, prompt: str) -> str:
-        ...
