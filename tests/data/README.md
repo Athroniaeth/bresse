@@ -1,0 +1,2 @@
+- Lichess study: it's the chapter 15 of this [study](https://lichess.org/study/owoHCjNz/fjHlYRwX)
+- Lichess explorer: it's game browse by Lichess analys dashboard, in occurrence it's this [game](https://lichess.org/QR5UbqUY) _(Carlsen.M vs Caruana.F)_
