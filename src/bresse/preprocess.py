@@ -29,6 +29,23 @@ def preprocess_game(game: chess.pgn.Game):
     return str_game
 
 
+def postprocess_result(result: str):
+    # Ex: ' O-O Bc' -> 'O-O Bc'
+    result = result.strip()
+
+    # Ex: 'O-O Bc' -> 'O-O'
+    result = result.split(" ")[0]
+
+    # Castling can have '–' instead of '-'
+    result = result.replace('–', '-')
+
+    # Ex: '0-0' -> 'O-O' (can have '1-0' also replace all '0-0' by 'O-O')
+    result = result.replace('0-0', 'O-O')
+    result = result.replace('o-o', 'O-O')
+
+    return result
+
+
 def game_to_board(game: chess.pgn.Game):
     """Get Board from pgn party"""
     board = chess.Board()
