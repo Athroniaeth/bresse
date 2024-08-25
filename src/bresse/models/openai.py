@@ -14,10 +14,15 @@ _AVAILABLE_MODELS = Literal["gpt-3.5-turbo-instruct",]
 
 
 class OpenAIModel(ModelCloud):
+    """OpenAI Cloud Model class for inference."""
+
     list_models: List[ModelId] = [GPT35Turbo()]
 
     def __init__(self, model_id: _AVAILABLE_MODELS, api_key: str):
+        # Check if model_id is available
         super().__init__(model_id)
+
+        # Initialize OpenAI client
         self.client = OpenAI(api_key=api_key)
 
     @override

@@ -47,7 +47,7 @@ Create `core-bressed` package who allow to use this chess engine with the follow
 - [ ] ModelIdentifier: (abstract)...
   - [ ] Add OpenAIModel
   - [ ] Add MistralModel
-  - [ ] Add LangChainModel (remote)
+  - [ ] Add LangChainModel (HuggingFaceHub remote, need to be dynamic)
   
 
 - [ ] Model: (abstract)
@@ -63,4 +63,6 @@ Create `core-bressed` package who allow to use this chess engine with the follow
 - [ ] Add ConfigRun
 - [ ] Add ConfigPGN
 
-- [ ] Add `find_model` for return the good Model class (OpenAI, Mistral)
+- [ ] Add `find_model` for return the good Model class (OpenAI, Mistral) (browse static models like OpenAI, Mistral, try local, else load LangChain remote)
+- [ ] Change repr of Output and CounterResult for set property attributes
+- [ ] Merge Output and CounterResult

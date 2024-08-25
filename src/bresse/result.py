@@ -1,6 +1,6 @@
 from collections import defaultdict
 from dataclasses import dataclass
-from typing import Optional, Callable, Iterable, List
+from typing import Callable, Iterable, List, Optional, Self
 
 import chess
 from chess import InvalidMoveError
@@ -8,6 +8,8 @@ from chess import InvalidMoveError
 
 @dataclass
 class Result:
+    """Result of LLM generation."""
+
     san: str
     postprocess_san: str
     exception: Optional[InvalidMoveError]
@@ -15,17 +17,41 @@ class Result:
 
 @dataclass
 class CounterResult:
+    """
+    Stock and count a list of result (LLM generation).
+
+    Attributes:
+        counter (Dict[int]): Counter of each san
+        list_result (List[Result]): List of result
+    """
+
     counter: defaultdict
     list_result: List[Result]
 
     @classmethod
-    def from_inference(cls, board: chess.Board, list_san: Iterable[str], preprocess_func: Optional[Callable] = None):
-        # Get the Board of end PGN
-        if preprocess_func is None:
-            preprocess_func = lambda x: x
+    def from_inference(
+        cls,
+        board: chess.Board,
+        list_san: Iterable[str],
+        preprocess_func: Optional[Callable] = None,
+    ) -> Self:
+        """
+        Create CounterResult from inference outputs of method Model class.
 
-        counter = defaultdict(int)
+        Args:
+            board (chess.Board): Board to test each san
+            list_san (Iterable[str]): List of san to test
+            preprocess_func (Callable, optional): Preprocess function for each san. Defaults to None.
+
+        Returns:
+            CounterResult: instance with all results
+        """
         list_results = []
+        counter = defaultdict(int)
+
+        # If no preprocess function, don't change san
+        if preprocess_func is None:
+            preprocess_func = lambda x: x  # noqa: E731
 
         for san in list_san:
             exception = None

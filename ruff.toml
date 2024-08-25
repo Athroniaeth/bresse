@@ -1,5 +1,5 @@
 # Max line length of code
-line-length = 150
+line-length = 88
 
 # Assume Python 3.12
 target-version = "py312"

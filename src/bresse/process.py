@@ -1,9 +1,10 @@
 from io import StringIO
+from typing import Union
 
 import chess.pgn
 
 
-def preprocess_game(game: chess.pgn.Game):
+def preprocess_game(game: Union[str, chess.pgn.Game]):
     """
     Preprocess a game to be used as prompt for LLM
 
@@ -32,6 +33,15 @@ def preprocess_game(game: chess.pgn.Game):
 
 
 def postprocess_result(result: str):
+    """
+    Clean result, san move prediction, for try to no have errors
+
+    Args:
+        result (str): San move prediction
+
+    Returns:
+        str: San move prediction cleaned
+    """
     # Ex: ' O-O Bc' -> 'O-O Bc'
     result = result.strip()
 
@@ -49,7 +59,7 @@ def postprocess_result(result: str):
 
 
 def pgn_to_board(pgn: str):
-    """Get Board from pgn party"""
+    """Get Board from PGN string."""
     io_pgn = StringIO(pgn)
     game = chess.pgn.read_game(io_pgn)
     moves = game.mainline_moves()
