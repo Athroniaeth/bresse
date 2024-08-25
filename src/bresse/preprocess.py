@@ -1,3 +1,5 @@
+from io import StringIO
+
 import chess.pgn
 
 
@@ -46,11 +48,13 @@ def postprocess_result(result: str):
     return result
 
 
-def game_to_board(game: chess.pgn.Game):
+def pgn_to_board(pgn: str):
     """Get Board from pgn party"""
-    board = chess.Board()
+    io_pgn = StringIO(pgn)
+    game = chess.pgn.read_game(io_pgn)
     moves = game.mainline_moves()
 
+    board = chess.Board()
     generator = (move.uci for move in moves)
     map(lambda san: board.push_uci(san), generator)
 

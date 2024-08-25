@@ -11,7 +11,7 @@ from bresse.identifiers.base import ModelId
 from bresse.identifiers.openai import GPT35Turbo
 from bresse.models.base import ModelCloud
 from bresse.output import Output
-from bresse.preprocess import preprocess_game, postprocess_result, game_to_board
+from bresse.preprocess import preprocess_game, postprocess_result, pgn_to_board
 from bresse.result import Result, CounterResult
 
 _AVAILABLE_MODELS = Literal[
@@ -54,7 +54,7 @@ class OpenAIModel(ModelCloud):
             outputs_tokens=output_tokens,
         )
 
-        board = game_to_board(game=pgn_prompt)
+        board = pgn_to_board(pgn=pgn_prompt)
         list_san = [choice.text for choice in completion.choices]
         parser = CounterResult.from_inference(board=board, list_san=list_san)
 
