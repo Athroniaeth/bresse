@@ -1,8 +1,8 @@
 from collections import defaultdict
 from dataclasses import dataclass
-from typing import Optional, List, Iterable, Callable
+from typing import Optional, Callable, Iterable, List
 
-import chess.pgn
+import chess
 from chess import InvalidMoveError
 
 
@@ -20,10 +20,10 @@ class CounterResult:
 
     @classmethod
     def from_inference(
-        cls,
-        board: chess.Board,
-        list_san: Iterable[str],
-        preprocess_func: Optional[Callable] = None
+            cls,
+            board: chess.Board,
+            list_san: Iterable[str],
+            preprocess_func: Optional[Callable] = None
     ):
         # Get the Board of end PGN
         if preprocess_func is None:
