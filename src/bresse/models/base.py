@@ -6,7 +6,7 @@ import chess.pgn
 
 from bresse.identifiers.base import ModelId
 from bresse.output import Output
-from bresse.preprocess import preprocess_game
+from bresse.process import preprocess_game
 from bresse.result import CounterResult
 
 

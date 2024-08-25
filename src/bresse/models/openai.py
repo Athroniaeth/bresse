@@ -11,7 +11,7 @@ from bresse.identifiers.base import ModelId
 from bresse.identifiers.openai import GPT35Turbo
 from bresse.models.base import ModelCloud
 from bresse.output import Output
-from bresse.preprocess import preprocess_game, postprocess_result, pgn_to_board
+from bresse.process import preprocess_game, postprocess_result, pgn_to_board
 from bresse.result import Result, CounterResult
 
 _AVAILABLE_MODELS = Literal[
