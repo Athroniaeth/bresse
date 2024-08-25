@@ -11,6 +11,7 @@ class ModelId:
         input_cost_million (int): Cost in million for input (in $)
         output_cost_million (int): Cost in million for output (in $)
     """
+
     id: str
     input_cost_million: int
     output_cost_million: int

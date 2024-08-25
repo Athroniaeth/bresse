@@ -19,7 +19,7 @@ def preprocess_game(game: chess.pgn.Game):
     trait = length_moves % 2 == 0
 
     # Delete at end the '1-0' if exist (for LLM predict next move)
-    length_result = len(game.headers['Result'])
+    length_result = len(game.headers["Result"])
     str_game = str_game[:-length_result]
 
     # If trait is for White, need to add number of move
@@ -39,11 +39,11 @@ def postprocess_result(result: str):
     result = result.split(" ")[0]
 
     # Castling can have '–' instead of '-'
-    result = result.replace('–', '-')
+    result = result.replace("–", "-")
 
     # Ex: '0-0' -> 'O-O' (can have '1-0' also replace all '0-0' by 'O-O')
-    result = result.replace('0-0', 'O-O')
-    result = result.replace('o-o', 'O-O')
+    result = result.replace("0-0", "O-O")
+    result = result.replace("o-o", "O-O")
 
     return result
 

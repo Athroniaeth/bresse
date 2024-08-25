@@ -19,12 +19,7 @@ class CounterResult:
     list_result: List[Result]
 
     @classmethod
-    def from_inference(
-            cls,
-            board: chess.Board,
-            list_san: Iterable[str],
-            preprocess_func: Optional[Callable] = None
-    ):
+    def from_inference(cls, board: chess.Board, list_san: Iterable[str], preprocess_func: Optional[Callable] = None):
         # Get the Board of end PGN
         if preprocess_func is None:
             preprocess_func = lambda x: x

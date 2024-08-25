@@ -14,7 +14,7 @@ class Model(ABC):
     list_models: List[ModelId] = []
 
     @abstractmethod
-    def _inference(self, game: chess.pgn.Game) -> Tuple[Output, CounterResult]:
+    def _inference(self, pgn_prompt: str) -> Tuple[Output, CounterResult]:
         """Inference of the model on any string"""
         ...
 

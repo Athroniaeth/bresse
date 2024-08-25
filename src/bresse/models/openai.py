@@ -1,36 +1,26 @@
-import io
 import os
-from collections import defaultdict
-from typing import List, Literal, final, Tuple, Any
+from typing import List, Literal, Tuple, override
 
-import chess.pgn
-from chess import InvalidMoveError
 from openai import OpenAI
 
 from bresse.identifiers.base import ModelId
 from bresse.identifiers.openai import GPT35Turbo
 from bresse.models.base import ModelCloud
 from bresse.output import Output
-from bresse.process import preprocess_game, postprocess_result, pgn_to_board
-from bresse.result import Result, CounterResult
+from bresse.process import pgn_to_board
+from bresse.result import CounterResult
 
-_AVAILABLE_MODELS = Literal[
-    'gpt-3.5-turbo-instruct',
-]
+_AVAILABLE_MODELS = Literal["gpt-3.5-turbo-instruct",]
 
 
 class OpenAIModel(ModelCloud):
     list_models: List[ModelId] = [GPT35Turbo()]
 
-    def __init__(
-            self,
-            model_id: _AVAILABLE_MODELS,
-            api_key: str
-    ):
+    def __init__(self, model_id: _AVAILABLE_MODELS, api_key: str):
         super().__init__(model_id)
         self.client = OpenAI(api_key=api_key)
 
-    @final
+    @override
     def _inference(self, pgn_prompt: str) -> Tuple[Output, CounterResult]:
         client = OpenAI(api_key=os.environ.get("OPENAI_API_KEY"))
 
@@ -59,5 +49,3 @@ class OpenAIModel(ModelCloud):
         parser = CounterResult.from_inference(board=board, list_san=list_san)
 
         return output, parser
-
-
