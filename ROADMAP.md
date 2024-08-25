@@ -15,7 +15,7 @@ Create `core-bressed` package who allow to use this chess engine with the follow
     - stop
     - logit_bias
     - logprobs
-      - return_prompt
+    - return_prompt
 ...
 
   - [ ] Return ResultInference 
@@ -27,7 +27,7 @@ Create `core-bressed` package who allow to use this chess engine with the follow
     - number request for 1$ ($ default can choose)
 
 
-  - [ ] Add configuration for PGN 
+  - [ ] Add configuration for edit in inference PGN 
     - event_name
     - site
     - date
@@ -54,7 +54,7 @@ Create `core-bressed` package who allow to use this chess engine with the follow
   - [ ] ModelCloud:
     - [ ] Add OpenAIModel
     - [ ] Add MistralModel
-    - [ ] Add LangChainModel (remote)
+    - [ ] Add LangChainModel (HuggingFaceHub remote)
     
   - [ ] ModelLocal:
     - [ ] Add TransformerModel (huggingface)
@@ -62,3 +62,5 @@ Create `core-bressed` package who allow to use this chess engine with the follow
   
 - [ ] Add ConfigRun
 - [ ] Add ConfigPGN
+
+- [ ] Add `find_model` for return the good Model class (OpenAI, Mistral)
