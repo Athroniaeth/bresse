@@ -7,6 +7,7 @@ target-version = "py312"
 # Target only the src, tests files
 include = [
     "src/**/*.py",
+    "tests/**/*.py",
 ]
 
 # Select some errors

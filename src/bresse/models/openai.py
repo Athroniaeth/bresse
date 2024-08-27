@@ -1,4 +1,4 @@
-from typing import List, Literal, Tuple, override, final
+from typing import List, Literal, Tuple, final, override
 
 from openai import OpenAI
 
@@ -9,7 +9,7 @@ from bresse.output import Output
 from bresse.process import pgn_to_board
 from bresse.result import CounterResult
 
-_AVAILABLE_MODELS = Literal["gpt-3.5-turbo-instruct",]
+AVAILABLE_MODELS = Literal["gpt-3.5-turbo-instruct",]
 
 
 class OpenAIModel(ModelCloud):
@@ -17,7 +17,7 @@ class OpenAIModel(ModelCloud):
 
     list_models: List[ModelId] = [GPT35Turbo()]
 
-    def __init__(self, model_id: _AVAILABLE_MODELS, api_key: str):
+    def __init__(self, model_id: AVAILABLE_MODELS, api_key: str):
         # Check if model_id is available
         super().__init__(model_id)
 

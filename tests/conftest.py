@@ -1,11 +1,6 @@
-from pathlib import Path
-
-# Path to the "data" directory
-CURRENT_FOLDER = Path(__file__).parents[0]
-DATA_FOLDER = CURRENT_FOLDER / "data"
-
 from dataclasses import dataclass
-from typing import Literal, Tuple, final, override, List, Optional
+from pathlib import Path
+from typing import List, Literal, Optional, Tuple, final, override
 
 from bresse.identifiers.base import ModelId
 from bresse.models.base import ModelCloud
@@ -13,21 +8,29 @@ from bresse.output import Output
 from bresse.process import pgn_to_board
 from bresse.result import CounterResult
 
+# Path to the "data" directory
+CURRENT_FOLDER = Path(__file__).parents[0]
+DATA_FOLDER = CURRENT_FOLDER / "data"
+
 
 @dataclass
 class FakeModelId(ModelId):
+    """Fake ModelId class for inference."""
+
     id: str = "gpt-3.5-turbo-instruct"
     input_cost_million: int = 3
     output_cost_million: int = 6
 
 
 class FakeModel(ModelCloud):
+    """Fake Model class for inference."""
+
     list_models: List[ModelId] = [FakeModelId()]
 
     def __init__(
-            self,
-            model_id: Literal["gpt-3.5-turbo-instruct"],
-            list_san: Optional[List[str]] = None,
+        self,
+        model_id: Literal["gpt-3.5-turbo-instruct"],
+        list_san: Optional[List[str]] = None,
     ):
         # Check if model_id is available
         super().__init__(model_id)
@@ -57,7 +60,7 @@ class FakeModel(ModelCloud):
 
 
 def load_path_pgn() -> List[Path]:
-    """ Parametrize func, return all PGN files in the "data" directory. """
+    """Parametrize func, return all PGN files in the "data" directory."""
     generator = DATA_FOLDER.glob("**/*.pgn")
     generator = (path.absolute() for path in generator)
 

@@ -9,10 +9,11 @@ from bresse.output import Output
 from bresse.result import CounterResult
 from tests.conftest import load_path_pgn
 
+# Load environment variables
 load_dotenv()
 
 
-@pytest.mark.cost
+@pytest.mark.costly
 @pytest.mark.parametrize("path_pgn", load_path_pgn())
 def test_models_inference(path_pgn: Path) -> None:
     pgn = path_pgn.read_text()
