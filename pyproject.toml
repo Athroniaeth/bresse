@@ -23,8 +23,8 @@ requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
 
 [tool.pytest.ini_options]
-
-
+pythonpath="src"
+testpaths = "tests"
 markers = [
     "cost: tests using LLM inference for real-world testing, so these are expensive tests using API keys in the .env file.",
 ]
