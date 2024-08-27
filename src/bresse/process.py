@@ -1,10 +1,9 @@
 from io import StringIO
-from typing import Union
 
 import chess.pgn
 
 
-def preprocess_game(game: Union[str, chess.pgn.Game]):
+def preprocess_game(game: chess.pgn.Game):
     """
     Preprocess a game to be used as prompt for LLM
 
@@ -63,6 +62,10 @@ def pgn_to_board(pgn: str):
     io_pgn = StringIO(pgn)
     game = chess.pgn.read_game(io_pgn)
     moves = game.mainline_moves()
+
+    if not moves:
+        last_line = pgn.strip().split("\n")[-1]
+        raise ValueError(f"chess-python can't parse this PGN '{last_line[:15]}'...")
 
     board = chess.Board()
     generator = (move.uci for move in moves)

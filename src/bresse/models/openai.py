@@ -1,5 +1,4 @@
-import os
-from typing import List, Literal, Tuple, override
+from typing import List, Literal, Tuple, override, final
 
 from openai import OpenAI
 
@@ -25,11 +24,10 @@ class OpenAIModel(ModelCloud):
         # Initialize OpenAI client
         self.client = OpenAI(api_key=api_key)
 
+    @final
     @override
     def _inference(self, pgn_prompt: str) -> Tuple[Output, CounterResult]:
-        client = OpenAI(api_key=os.environ.get("OPENAI_API_KEY"))
-
-        completion = client.completions.create(
+        completion = self.client.completions.create(
             model=self.model.id,
             prompt=pgn_prompt,
             temperature=0.0,
