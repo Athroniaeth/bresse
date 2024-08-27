@@ -4,7 +4,7 @@ import pytest
 
 from bresse.output import Output
 from bresse.result import CounterResult
-from conftest import load_path_pgn, FakeModel
+from tests.conftest import load_path_pgn, FakeModel
 
 
 @pytest.mark.parametrize("path_pgn", load_path_pgn())
