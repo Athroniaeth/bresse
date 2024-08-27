@@ -66,3 +66,5 @@ Create `core-bressed` package who allow to use this chess engine with the follow
 - [ ] Add `find_model` for return the good Model class (OpenAI, Mistral) (browse static models like OpenAI, Mistral, try local, else load LangChain remote)
 - [ ] Change repr of Output and CounterResult for set property attributes
 - [ ] Merge Output and CounterResult
+- [ ] Add method to Model to get san move from prediction (move more predicted and valid), play the move on board, etc.
+- [ ] Add method to Model to play game from PGN of A-Z moves (just with pgn info and '1.' at end of line)
