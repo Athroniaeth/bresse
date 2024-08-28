@@ -68,7 +68,8 @@ def pgn_to_board(pgn: str):
     moves = game.mainline_moves()
 
     if game.errors:
-        list_error = ", ".join(game.errors)
+        list_error = (f"{error}" for error in game.errors)
+        list_error = ", ".join(list_error)
         raise ValueError(f"Error in PGN, list of errors: {list_error}")
 
     board = chess.Board()

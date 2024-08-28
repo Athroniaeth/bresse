@@ -1,13 +1,13 @@
 import io
 from abc import ABC, abstractmethod
 from dataclasses import dataclass
-from typing import List, Tuple, Union, final, Optional
+from typing import List, Optional, Tuple, Union, final
 
 import chess.pgn
 
 from bresse.identifiers.base import ModelId
 from bresse.output import Output
-from bresse.process import preprocess_game, pgn_to_board
+from bresse.process import pgn_to_board, preprocess_game
 from bresse.result import CounterResult
 
 
@@ -95,10 +95,19 @@ class Model(ABC):
             move = board.parse_san(san)
             print(f"Model '{self}' (n={number}) predicts: '{san}'")
 
-            if child_node is not None:
-                child_node = child_node.add_variation(move)
-            else:
-                child_node = game.add_variation(move)
+            child_node = get_last_variation(game)
+            child_node.add_variation(move)
+
+
+def get_last_variation(
+    node: Union[chess.pgn.Game, chess.pgn.ChildNode],
+) -> chess.pgn.ChildNode:
+    """Get the last variation of a node."""
+    if node.variations:
+        last_node = node.variations[-1]
+        return get_last_variation(last_node)
+
+    return node
 
 
 @dataclass

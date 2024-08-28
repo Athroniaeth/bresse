@@ -1,4 +1,3 @@
-from dataclasses import dataclass
 
 from bresse.identifiers.base import ModelId
 
