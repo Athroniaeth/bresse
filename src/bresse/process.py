@@ -26,9 +26,13 @@ def preprocess_game(game: chess.pgn.Game):
     # Allow to add number without intervention of LLM
     if trait:
         count_move = length_moves // 2 + 1
-        str_game += f"{count_move}. "
 
-    return str_game
+        # Note: Don't add space after number, LLM have better result
+        # if he can set by himself the space (first black move give always '1...', idk why)
+        # set strip at end because chess library set space at end with black trait
+        str_game += f"{count_move}."
+
+    return str_game.strip()
 
 
 def postprocess_result(result: str):
@@ -63,12 +67,14 @@ def pgn_to_board(pgn: str):
     game = chess.pgn.read_game(io_pgn)
     moves = game.mainline_moves()
 
-    if not moves:
-        last_line = pgn.strip().split("\n")[-1]
-        raise ValueError(f"chess-python can't parse this PGN '{last_line[:15]}'...")
+    if game.errors:
+        list_error = ", ".join(game.errors)
+        raise ValueError(f"Error in PGN, list of errors: {list_error}")
 
     board = chess.Board()
-    generator = (move.uci for move in moves)
-    map(lambda san: board.push_uci(san), generator)
+    generator = (move.uci() for move in moves)
+
+    for move in generator:
+        board.push_uci(move)
 
     return board

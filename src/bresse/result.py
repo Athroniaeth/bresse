@@ -1,9 +1,11 @@
-from collections import defaultdict
+from collections import Counter
 from dataclasses import dataclass
 from typing import Callable, Iterable, List, Optional, Self
 
 import chess
 from chess import InvalidMoveError
+
+from bresse.process import postprocess_result
 
 
 @dataclass
@@ -25,8 +27,19 @@ class CounterResult:
         list_result (List[Result]): List of result
     """
 
-    counter: defaultdict
+    counter: Counter
     list_result: List[Result]
+
+    @property
+    def most_common(self) -> str:
+        """Return the most common SAN move."""
+        list_san_count = self.counter.most_common(1)
+
+        if not list_san_count:
+            list_valid_san = [", ".join(result.san for result in self.list_result)]
+            raise ValueError(f"No valid SAN move found, all results: {list_valid_san}")
+
+        return list_san_count[0][0]
 
     @classmethod
     def from_inference(
@@ -47,26 +60,28 @@ class CounterResult:
             CounterResult: instance with all results
         """
         list_results = []
-        counter = defaultdict(int)
+        counter = Counter()
 
         # If no preprocess function, don't change san
         if preprocess_func is None:
-            preprocess_func = lambda x: x  # noqa: E731
+            preprocess_func = postprocess_result
 
         for san in list_san:
             exception = None
             postprocess_san = preprocess_func(san)
-            counter[postprocess_san] += 1
 
             try:
                 # Test if the san is valid move
                 board.push_san(postprocess_san)
             except Exception as _exception:
                 # Get error for stock in Result
-                _exception = exception
+                exception = _exception
             else:
                 # Board don't push on error
                 board.pop()
+
+                # Add to Counter only if don't have error
+                counter.update([postprocess_san])
             finally:
                 # Any case, stock result of validation move
                 result = Result(

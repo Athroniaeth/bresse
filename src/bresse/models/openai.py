@@ -33,8 +33,8 @@ class OpenAIModel(ModelCloud):
             temperature=0.0,
             stop=["\n"],
             # seed=42,
-            max_tokens=2,
-            n=1,
+            max_tokens=3,
+            n=12,
         )
 
         input_tokens = completion.usage.prompt_tokens
