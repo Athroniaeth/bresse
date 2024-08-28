@@ -2,11 +2,11 @@ from typing import List, Literal, Tuple, final, override
 
 from openai import OpenAI
 
+from bresse._chess import pgn_to_board
 from bresse.identifiers.base import ModelId
 from bresse.identifiers.openai import GPT35Turbo
 from bresse.models.base import ModelCloud
 from bresse.output import Output
-from bresse.process import pgn_to_board
 from bresse.result import CounterResult
 
 AVAILABLE_MODELS = Literal["gpt-3.5-turbo-instruct",]

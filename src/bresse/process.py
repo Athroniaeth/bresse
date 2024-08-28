@@ -1,5 +1,3 @@
-from io import StringIO
-
 import chess.pgn
 
 
@@ -59,23 +57,3 @@ def postprocess_result(result: str):
     result = result.replace("o-o", "O-O")
 
     return result
-
-
-def pgn_to_board(pgn: str):
-    """Get Board from PGN string."""
-    io_pgn = StringIO(pgn)
-    game = chess.pgn.read_game(io_pgn)
-    moves = game.mainline_moves()
-
-    if game.errors:
-        list_error = (f"{error}" for error in game.errors)
-        list_error = ", ".join(list_error)
-        raise ValueError(f"Error in PGN, list of errors: {list_error}")
-
-    board = chess.Board()
-    generator = (move.uci() for move in moves)
-
-    for move in generator:
-        board.push_uci(move)
-
-    return board

@@ -1,4 +1,3 @@
-
 from bresse.identifiers.base import ModelId
 
 
