@@ -1,12 +1,13 @@
 import io
 from abc import ABC, abstractmethod
-from typing import List, Optional, Tuple, Union, final
+from dataclasses import dataclass
+from typing import List, Tuple, Union, final, Optional
 
 import chess.pgn
 
 from bresse.identifiers.base import ModelId
 from bresse.output import Output
-from bresse.process import pgn_to_board, preprocess_game
+from bresse.process import preprocess_game, pgn_to_board
 from bresse.result import CounterResult
 
 
@@ -71,7 +72,36 @@ class Model(ABC):
 
         return found_model
 
+    def play(self, game: chess.pgn.Game, number: int = 1):
+        """
+        Play a chess game with the model.
 
+        Notes:
+            game will be modified in place by adding variations
+            play white or black depending on the number of moves played and the trait
+
+        Args:
+            game (chess.pgn.Game): Game to play
+            number (int, optional): Number of moves to play. Defaults to 1.
+        """
+        child_node: Optional[chess.pgn.ChildNode] = None
+
+        for index in range(number):
+            pgn = f"{game}"
+            board = pgn_to_board(pgn=pgn)
+            output, counter = self.inference(pgn=pgn)
+
+            san = counter.most_common
+            move = board.parse_san(san)
+            print(f"Model '{self}' (n={number}) predicts: '{san}'")
+
+            if child_node is not None:
+                child_node = child_node.add_variation(move)
+            else:
+                child_node = game.add_variation(move)
+
+
+@dataclass
 class ModelCloud(Model, ABC):
     """
     Base class for all LLM models using cloud services (OpenAI, Mistral, etc.).
@@ -100,31 +130,3 @@ class ModelCloud(Model, ABC):
 
         else:
             raise TypeError("Model must be either a string or a ModelId instance.")
-
-    def play(self, game: chess.pgn.Game, number: int = 1):
-        """
-        Play a chess game with the model.
-
-        Notes:
-            game will be modified in place by adding variations
-            play white or black depending on the number of moves played and the trait
-
-        Args:
-            game (chess.pgn.Game): Game to play
-            number (int, optional): Number of moves to play. Defaults to 1.
-        """
-        child_node: Optional[chess.pgn.ChildNode] = None
-
-        for index in range(number):
-            pgn = f"{game}"
-            board = pgn_to_board(pgn=pgn)
-            output, counter = self.inference(pgn=pgn)
-
-            san = counter.most_common
-            move = board.parse_san(san)
-            print(f"Model '{self.model.id}' (n={number}) predicts: '{san}'")
-
-            if child_node is not None:
-                child_node = child_node.add_variation(move)
-            else:
-                child_node = game.add_variation(move)

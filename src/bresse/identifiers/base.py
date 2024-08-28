@@ -15,3 +15,6 @@ class ModelId:
     id: str
     input_cost_million: int
     output_cost_million: int
+
+    def __repr__(self):
+        return f"{self.id}"
