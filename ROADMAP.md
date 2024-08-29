@@ -66,3 +66,8 @@ Create `core-bressed` package who allow to use this chess engine with the follow
 - [ ] Add `find_model` for return the good Model class (OpenAI, Mistral) (browse static models like OpenAI, Mistral, try local, else load LangChain remote)
 - [ ] Change repr of Output and CounterResult for set property attributes
 - [ ] Merge Output and CounterResult
+
+- [ ] Add 'postprocess' system for edit annotation of PGN or add variation before inference
+  - [ ] Retry inference with different PGN metadata, add to Counter for 'most_common' move
+  - [ ] Add annotation symbol to PGN before inference (for white, black, all moves, X previous move)
+  - [ ] Add annotation comment to PGN before inference (for white, black, all moves, X previous move)
