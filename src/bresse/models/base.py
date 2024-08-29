@@ -87,6 +87,7 @@ class Model(ABC):
         """
         for index in range(number):
             output, counter = self.inference(pgn=f"{game}")
+            print(counter.list_result)
             san = counter.most_common
 
             # Play the move in the game

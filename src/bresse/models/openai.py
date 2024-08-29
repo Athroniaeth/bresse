@@ -30,11 +30,11 @@ class OpenAIModel(ModelCloud):
         completion = self.client.completions.create(
             model=self.model.id,
             prompt=pgn_prompt,
-            temperature=0.0,
+            temperature=0.3,
             stop=["\n"],
             # seed=42,
-            max_tokens=3,
-            n=12,
+            max_tokens=4,
+            n=6,
         )
 
         input_tokens = completion.usage.prompt_tokens
