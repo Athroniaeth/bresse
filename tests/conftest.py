@@ -2,10 +2,10 @@ from dataclasses import dataclass
 from pathlib import Path
 from typing import List, Literal, Optional, Tuple, final, override
 
+from bresse._chess import pgn_to_board
 from bresse.identifiers.base import ModelId
 from bresse.models.base import ModelCloud
 from bresse.output import Output
-from bresse.process import pgn_to_board
 from bresse.result import CounterResult
 
 # Path to the "data" directory

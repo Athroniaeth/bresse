@@ -9,7 +9,10 @@
     <br>
 </div>
 
-Example of a project using poetry, which can be copied and pasted as soon as a new project is created.
+Bresse is a library for use LLM (Large Language Model) like chess AI. This library takes advantage of the fact that LLMs can reproduce a format representing a chess game called PGN. You will find various tools to facilitate experiments, PGN modifications during inference and various useful information.
+
+<img src="docs/static/example_game.gif" alt="Presentation image" width="550px"/>
+
 
 ## Installation
 
