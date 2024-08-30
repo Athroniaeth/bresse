@@ -82,8 +82,7 @@ class Model(ABC):
         self,
         game: chess.pgn.Game,
         config: Input = Input(),
-        number: int = 1,
-    ):
+    ) -> Output:
         """
         Play a chess game with the model.
 
@@ -94,15 +93,14 @@ class Model(ABC):
         Args:
             game (chess.pgn.Game): Game to play
             config (Input): Configuration for LLM inference.
-            number (int, optional): Number of moves to play. Defaults to 1.
         """
-        for index in range(number):
-            output = self.inference(pgn=f"{game}", config=config)
-            san = output.most_common
+        output = self.inference(pgn=f"{game}", config=config)
+        san = output.most_common
 
-            # Play the move in the game
-            game_play_san(game=game, san=san)
-            print(f"Model '{self}' (n={number}) predicts: '{san}'")
+        # Play the move in the game
+        game_play_san(game=game, san=san)
+        print(f"Model '{self}' predicts: '{san}'")
+        return output
 
 
 @dataclass
