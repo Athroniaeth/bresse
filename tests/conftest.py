@@ -1,12 +1,12 @@
 from dataclasses import dataclass
 from pathlib import Path
-from typing import List, Literal, Optional, Tuple, final, override
+from typing import List, Literal, Optional, final, override
 
 from bresse._chess import pgn_to_board
 from bresse.identifiers.base import ModelId
+from bresse.input import InputInference
 from bresse.models.base import ModelCloud
-from bresse.output import Output
-from bresse.result import CounterResult
+from bresse.output import Output, OutputGeneration, OutputInference
 
 # Path to the "data" directory
 CURRENT_FOLDER = Path(__file__).parents[0]
@@ -42,11 +42,13 @@ class FakeModel(ModelCloud):
 
     @final
     @override
-    def _inference(self, pgn_prompt: str) -> Tuple[Output, CounterResult]:
+    def _inference(
+        self, pgn_prompt: str, config: InputInference = InputInference()
+    ) -> Output:
         input_tokens = len(pgn_prompt)
         output_tokens = 3
 
-        output = Output(
+        output_inf = OutputInference(
             model_id=self.model,
             number_requests=1,
             inputs_tokens=input_tokens,
@@ -54,9 +56,12 @@ class FakeModel(ModelCloud):
         )
 
         board = pgn_to_board(pgn=pgn_prompt)
-        parser = CounterResult.from_inference(board=board, list_san=self.list_san)
+        output_gen = OutputGeneration.from_inference(
+            board=board, list_san=self.list_san
+        )
 
-        return output, parser
+        output = Output.from_outputs(output_gen, output_inf)
+        return output
 
 
 def load_path_pgn() -> List[Path]:

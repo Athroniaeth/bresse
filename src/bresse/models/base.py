@@ -1,7 +1,7 @@
 import io
 from abc import ABC, abstractmethod
 from dataclasses import dataclass
-from typing import List, Tuple, Union, final
+from typing import List, Union, final
 
 import chess.pgn
 
@@ -10,7 +10,6 @@ from bresse.identifiers.base import ModelId
 from bresse.input import InputInference
 from bresse.output import Output
 from bresse.process import preprocess_game
-from bresse.result import CounterResult
 
 
 class Model(ABC):
@@ -26,7 +25,7 @@ class Model(ABC):
     @abstractmethod
     def _inference(
         self, pgn_prompt: str, config: InputInference = InputInference()
-    ) -> Tuple[Output, CounterResult]:
+    ) -> Output:
         """
         Inference of the model on any string
 
@@ -38,14 +37,12 @@ class Model(ABC):
             pgn_prompt (str): PGN string to infer
 
         Returns:
-            Tuple[Output, CounterResult]: Output object and CounterResult object
+            Output: Output object and CounterResult object
         """
         ...
 
     @final
-    def inference(
-        self, pgn: str, config: InputInference = InputInference()
-    ) -> Tuple[Output, CounterResult]:
+    def inference(self, pgn: str, config: InputInference = InputInference()) -> Output:
         """
         Inference the model on a given prompt
 
@@ -54,7 +51,7 @@ class Model(ABC):
             config (InputInference): Configuration for LLM inference
 
         Returns:
-            Tuple[Output, CounterResult]: Output object and CounterResult object
+            Output: Output object and CounterResult object
         """
         io_pgn = io.StringIO(pgn)
 
@@ -98,9 +95,8 @@ class Model(ABC):
             number (int, optional): Number of moves to play. Defaults to 1.
         """
         for index in range(number):
-            output, counter = self.inference(pgn=f"{game}", config=config)
-            print(counter.list_result)
-            san = counter.most_common
+            output = self.inference(pgn=f"{game}", config=config)
+            san = output.most_common
 
             # Play the move in the game
             game_play_san(game=game, san=san)

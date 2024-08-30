@@ -1,4 +1,4 @@
-from typing import List, Literal, Tuple, final, override
+from typing import List, Literal, final, override
 
 from openai import OpenAI
 
@@ -7,8 +7,7 @@ from bresse.identifiers.base import ModelId
 from bresse.identifiers.openai import GPT35Turbo
 from bresse.input import InputInference
 from bresse.models.base import ModelCloud
-from bresse.output import Output
-from bresse.result import CounterResult
+from bresse.output import Output, OutputGeneration, OutputInference
 
 AVAILABLE_MODELS = Literal["gpt-3.5-turbo-instruct",]
 
@@ -29,7 +28,7 @@ class OpenAIModel(ModelCloud):
     @override
     def _inference(
         self, pgn_prompt: str, config: InputInference = InputInference()
-    ) -> Tuple[Output, CounterResult]:
+    ) -> Output:
         completion = self.client.completions.create(
             model=self.model.id,
             prompt=pgn_prompt,
@@ -49,7 +48,7 @@ class OpenAIModel(ModelCloud):
         input_tokens = completion.usage.prompt_tokens
         output_tokens = completion.usage.completion_tokens
 
-        output = Output(
+        output_inf = OutputInference(
             model_id=self.model,
             number_requests=1,
             inputs_tokens=input_tokens,
@@ -58,6 +57,8 @@ class OpenAIModel(ModelCloud):
 
         board = pgn_to_board(pgn=pgn_prompt)
         list_san = [choice.text for choice in completion.choices]
-        parser = CounterResult.from_inference(board=board, list_san=list_san)
+        output_gen = OutputGeneration.from_inference(board=board, list_san=list_san)
 
-        return output, parser
+        output = Output.from_outputs(output_inf=output_inf, output_gen=output_gen)
+
+        return output
