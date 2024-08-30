@@ -1,5 +1,5 @@
 from io import StringIO
-from typing import Literal, Union, Optional
+from typing import Literal, Optional, Union
 
 import chess.pgn
 
@@ -25,7 +25,7 @@ def pgn_to_board(pgn: str):
 
 
 def get_child_node(
-        node: Union[chess.pgn.Game, chess.pgn.ChildNode],
+    node: Union[chess.pgn.Game, chess.pgn.ChildNode],
 ) -> chess.pgn.ChildNode:
     """Get the last variation of game node."""
     if node.variations:
@@ -58,16 +58,16 @@ def game_play_san(game: chess.pgn.Game, san: str):
 
 
 def generate_pgn(
-        round_: int = 1,
-        white: str = "Carlsen, M.",
-        black: str = "Caruana, F.",
-        white_elo: int = 2882,
-        black_elo: int = 2818,
-        time_control: str = "-",
-        termination: Literal["Normal"] = "Normal",
-        variant: Literal["Standard"] = "Standard",
-        result: Literal["*", "1-0", "0-1", "1/2-1/2"] = "*",
-        base_pgn: Optional[str] = None,
+    round_: int = 1,
+    white: str = "Carlsen, M.",
+    black: str = "Caruana, F.",
+    white_elo: int = 2882,
+    black_elo: int = 2818,
+    time_control: str = "-",
+    termination: Literal["Normal"] = "Normal",
+    variant: Literal["Standard"] = "Standard",
+    result: Literal["*", "1-0", "0-1", "1/2-1/2"] = "*",
+    base_pgn: Optional[str] = None,
 ) -> chess.pgn.Game:
     """
     Generate a PGN game.
@@ -94,16 +94,18 @@ def generate_pgn(
     else:
         game = chess.pgn.Game()
 
-    game.headers = chess.pgn.Headers({
-        "Round": f"{round_}",
-        "White": white,
-        "Black": black,
-        "Result": result,
-        "WhiteElo": f"{white_elo}",
-        "BlackElo": f"{black_elo}",
-        "Variant": variant,
-        "TimeControl": time_control,
-        "Termination": termination,
-    })
+    game.headers = chess.pgn.Headers(
+        {
+            "Round": f"{round_}",
+            "White": white,
+            "Black": black,
+            "Result": result,
+            "WhiteElo": f"{white_elo}",
+            "BlackElo": f"{black_elo}",
+            "Variant": variant,
+            "TimeControl": time_control,
+            "Termination": termination,
+        }
+    )
 
     return game

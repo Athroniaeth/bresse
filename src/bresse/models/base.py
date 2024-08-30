@@ -7,6 +7,7 @@ import chess.pgn
 
 from bresse._chess import game_play_san
 from bresse.identifiers.base import ModelId
+from bresse.input import InputInference
 from bresse.output import Output
 from bresse.process import preprocess_game
 from bresse.result import CounterResult
@@ -23,7 +24,9 @@ class Model(ABC):
     list_models: List[ModelId] = []
 
     @abstractmethod
-    def _inference(self, pgn_prompt: str) -> Tuple[Output, CounterResult]:
+    def _inference(
+        self, pgn_prompt: str, config: InputInference = InputInference()
+    ) -> Tuple[Output, CounterResult]:
         """
         Inference of the model on any string
 
@@ -40,12 +43,15 @@ class Model(ABC):
         ...
 
     @final
-    def inference(self, pgn: str) -> Tuple[Output, CounterResult]:
+    def inference(
+        self, pgn: str, config: InputInference = InputInference()
+    ) -> Tuple[Output, CounterResult]:
         """
         Inference the model on a given prompt
 
         Args:
             pgn (str): PGN string to infer
+            config (InputInference): Configuration for LLM inference
 
         Returns:
             Tuple[Output, CounterResult]: Output object and CounterResult object
@@ -58,7 +64,7 @@ class Model(ABC):
         # Reduce inputs tokens for generate san
         prompt_pgn = preprocess_game(game)
 
-        return self._inference(prompt_pgn)
+        return self._inference(prompt_pgn, config)
 
     def _get_identifier_str(self, model_id: str) -> ModelId:
         """Found the ModelId from id attributes."""
@@ -73,7 +79,12 @@ class Model(ABC):
 
         return found_model
 
-    def play(self, game: chess.pgn.Game, number: int = 1):
+    def play(
+        self,
+        game: chess.pgn.Game,
+        config: InputInference = InputInference(),
+        number: int = 1,
+    ):
         """
         Play a chess game with the model.
 
@@ -83,10 +94,11 @@ class Model(ABC):
 
         Args:
             game (chess.pgn.Game): Game to play
+            config (InputInference): Configuration for LLM inference.
             number (int, optional): Number of moves to play. Defaults to 1.
         """
         for index in range(number):
-            output, counter = self.inference(pgn=f"{game}")
+            output, counter = self.inference(pgn=f"{game}", config=config)
             print(counter.list_result)
             san = counter.most_common
 

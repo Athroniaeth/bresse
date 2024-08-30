@@ -5,6 +5,7 @@ from openai import OpenAI
 from bresse._chess import pgn_to_board
 from bresse.identifiers.base import ModelId
 from bresse.identifiers.openai import GPT35Turbo
+from bresse.input import InputInference
 from bresse.models.base import ModelCloud
 from bresse.output import Output
 from bresse.result import CounterResult
@@ -26,15 +27,23 @@ class OpenAIModel(ModelCloud):
 
     @final
     @override
-    def _inference(self, pgn_prompt: str) -> Tuple[Output, CounterResult]:
+    def _inference(
+        self, pgn_prompt: str, config: InputInference = InputInference()
+    ) -> Tuple[Output, CounterResult]:
         completion = self.client.completions.create(
             model=self.model.id,
             prompt=pgn_prompt,
-            temperature=0.3,
-            stop=["\n"],
-            # seed=42,
-            max_tokens=4,
-            n=6,
+            stop=["\n", "#", "1-0", "0-1"],  # '1/2-1/2' is not a valid stop token
+            seed=config.seed,
+            n=config.n,
+            best_of=config.best_of,
+            max_tokens=config.max_tokens,
+            presence_penalty=config.presence_penalty,
+            frequency_penalty=config.frequency_penalty,
+            top_p=config.top_p,
+            temperature=config.temperature,
+            logprobs=config.logprobs,
+            logit_bias=config.logit_bias,
         )
 
         input_tokens = completion.usage.prompt_tokens
