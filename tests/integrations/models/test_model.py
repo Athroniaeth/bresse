@@ -5,8 +5,8 @@ import pytest
 from dotenv import load_dotenv
 
 from bresse.models.openai import OpenAIModel
-from bresse.output import OutputInference
-from bresse.result import OutputGeneration
+from bresse.output import OutputInference, Output
+from bresse.output import OutputGeneration
 from tests.conftest import load_path_pgn
 
 # Load environment variables
@@ -22,14 +22,11 @@ def test_models_inference(path_pgn: Path) -> None:
         model_id="gpt-3.5-turbo-instruct",
         api_key=os.getenv("OPENAI_API_KEY"),
     )
-    output, counter = model.inference(pgn)
+    output = model.inference(pgn)
 
-    assert isinstance(output, OutputInference)
+    assert isinstance(output, Output)
     assert output.model_id == model.model
 
     assert output.number_requests == 1
     # assert output.inputs_tokens == ... # Depends on the PGN
-
-    assert isinstance(counter, OutputGeneration)
-    print()
-    # Result depends on Board (and therefore PGN, test only the type)
+    # OutputGeneration depends on Board (and therefore PGN, test only the type)
