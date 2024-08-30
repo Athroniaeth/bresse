@@ -5,8 +5,7 @@ import pytest
 from dotenv import load_dotenv
 
 from bresse.models.openai import OpenAIModel
-from bresse.output import OutputInference, Output
-from bresse.output import OutputGeneration
+from bresse.output import Output
 from tests.conftest import load_path_pgn
 
 # Load environment variables

@@ -1,0 +1,19 @@
+[Event "7th Sinquefield Cup 2019"]
+[Site "Saint Louis USA"]
+[Date "2019.08.19"]
+[Round "3.2"]
+[White "Carlsen, M."]
+[Black "Caruana, F."]
+[Result "1/2-1/2"]
+[WhiteElo "2882"]
+[BlackElo "2818"]
+[Variant "Standard"]
+[TimeControl "-"]
+[ECO "D37"]
+[Opening "Queen's Gambit Declined: Three Knights, Vienna Variation"]
+[Termination "Normal"]
+[Annotator "lichess.org"]
+
+1. d4 { [%eval 0.25] } 1... Nf6 { [%eval 0.22] } 2. c4 { [%eval 0.18] } 2... e6 { [%eval 0.23] } 3. Nf3 { [%eval 0.12] } 3... d5 { [%eval 0.23] } 4. Nc3 { [%eval 0.14] } 4... dxc4 { [%eval 0.04] } { D37 Queen's Gambit Declined: Three Knights, Vienna Variation } 5. e4 { [%eval 0.09] } 5... Bb4 { [%eval 0.28] } 6. Bxc4 { [%eval 0.0] } 6... Nxe4 { [%eval 0.23] } 7. Nxe4 { [%eval 0.0] } 7... Nf6 { [%eval 0.26] } 8. Qa4+ { [%eval 0.3] } 8... Nc6 { [%eval 0.3] } 9. Ne5 { [%eval 0.39] } 9... Bd6 { [%eval 0.34] } 10. Nxc6 { [%eval 0.44] } 10... bxc6 { [%eval 0.3] } 11. Qxc6+ { [%eval 0.36] } 11... Bd7 { [%eval 0.3] } 12. Qf3 { [%eval 0.51] } 12... O-O { [%eval 0.53] } 13. Bg5 { [%eval 0.41] } 13... h6 { [%eval 0.61] } 14. Bh4 { [%eval 0.49] } 14... Rb8 { [%eval 0.56] } 15. b3 { [%eval 0.52] } 15... Rb6 { [%eval 0.53] } 16. Ne4 { [%eval 0.44] } 16... Be7 { [%eval 0.43] } 17. Nxf6+ { [%eval 0.5] } 17... Bxf6 { [%eval 0.58] } 18. Bxf6 { [%eval 0.57] } 18... Qxf6 { [%eval 0.54] } 19. Qxf6 { [%eval 0.66] } 19... gxf6 { [%eval 0.53] } 20. d5 { [%eval 0.48] } 20... e5 { [%eval 0.52] } 21. Rfc1 { [%eval 0.08] } 21... a5 { [%eval 0.46] } 22. Be2 { [%eval 0.13] } 22... c6 { [%eval 0.44] } 23. dxc6 { [%eval 0.32] } 23... Rxc6 { [%eval 0.58] } 24. Rxc6 { [%eval 0.56] } 24... Bxc6 { [%eval 0.51] } 25. Rc1 { [%eval 0.46] } 25... Bd7 { [%eval 0.48] } 26. Rc5 { [%eval 0.31] } 26... Ra8 { [%eval 0.8] } 27. f4 { [%eval 0.27] } 27... exf4 { [%eval 0.32] } 28. Bf3 { [%eval 0.31] } 28... Ra6 { [%eval 0.22] } 29. Kf2 { [%eval 0.0] } 29... Be6 { [%eval 0.0] } 30. Be2 { [%eval 0.0] } 30... Ra8 { [%eval 0.0] } 31. Bf3 { [%eval 0.19] } 31... Ra6 { [%eval 0.23] } 32. Bb7 { [%eval 0.0] } 32... Ra7 { [%eval 0.0] } 33. Be4 { [%eval 0.0] } 33... Kg7 { [%eval 0.0] } 34. Kf3 { [%eval 0.0] } 34... a4 { [%eval 0.0] } 35. Bc2 { [%eval -0.19] } 35... axb3 { [%eval -0.17] } 36. Bxb3 { [%eval -0.13] } 36... Rb7 { [%eval -0.13] } 37. Kxf4 { [%eval -0.17] } 37... Bxb3 { [%eval -0.13] } 38. axb3 { [%eval -0.13] } 38... Rxb3 { [%eval 0.0] } 39. g3 { [%eval 0.0] } 39... Rb4+ { [%eval 0.0] } 40. Kf3 { [%eval 0.0] } 40... Rb3+ { [%eval -0.03] } 41. Kf4 { [%eval -0.03] } 41... Rb4+ { [%eval -0.13] } 42. Kf3 { [%eval -0.13] } 42... Rb3+ { [%eval 0.0] } 43. Kf4 { [%eval -0.13] } { The game is a draw. } 1/2-1/2
+
+

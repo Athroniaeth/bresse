@@ -42,9 +42,7 @@ class FakeModel(ModelCloud):
 
     @final
     @override
-    def _inference(
-        self, pgn_prompt: str, config: Input = Input()
-    ) -> Output:
+    def _inference(self, pgn_prompt: str, config: Input = Input()) -> Output:
         input_tokens = len(pgn_prompt)
         output_tokens = 3
 
@@ -64,17 +62,18 @@ class FakeModel(ModelCloud):
         return output
 
 
-def load_path_pgn() -> List[Path]:
+def load_path_pgn(sub_folder: Literal["error", "valid"] = "valid") -> List[Path]:
     """Parametrize func, return all PGN files in the "data" directory."""
-    generator = DATA_FOLDER.glob("**/*.pgn")
+    generator = DATA_FOLDER.glob(f"{sub_folder}/**/*.pgn")
     generator = (path.absolute() for path in generator)
 
     list_path_pgn = list(generator)
 
     # Validate PGN file
-    for path_pgn in list_path_pgn:
-        pgn = path_pgn.read_text()
-        pgn_to_board(pgn=pgn)
+    if sub_folder == "valid":
+        for path_pgn in list_path_pgn:
+            pgn = path_pgn.read_text()
+            pgn_to_board(pgn=pgn)
 
     assert list_path_pgn, "No PGN files found in the 'data' directory."
     return list_path_pgn

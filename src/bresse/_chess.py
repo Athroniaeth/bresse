@@ -82,7 +82,7 @@ def generate_pgn(
         variant (Literal["Standard"]): Chess variant.
         time_control (str): Time control of the game.
         termination (Literal["Normal"]): Termination of the game.
-        base_pgn (Optional[str]): Base PGN string to start the game.
+        base_pgn (Optional[str]): Base PGN string to start the game (only moves).
 
     Returns:
         chess.pgn.Game: PGN game object.

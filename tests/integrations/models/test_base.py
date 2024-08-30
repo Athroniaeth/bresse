@@ -2,8 +2,7 @@ from pathlib import Path
 
 import pytest
 
-from bresse.output import OutputInference, Output
-from bresse.output import OutputGeneration
+from bresse.output import Output
 from tests.conftest import FakeModel, load_path_pgn
 
 
