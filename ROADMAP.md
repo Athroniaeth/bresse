@@ -71,3 +71,6 @@ Create `core-bressed` package who allow to use this chess engine with the follow
   - [ ] Retry inference with different PGN metadata, add to Counter for 'most_common' move
   - [ ] Add annotation symbol to PGN before inference (for white, black, all moves, X previous move)
   - [ ] Add annotation comment to PGN before inference (for white, black, all moves, X previous move)
+
+- [ ] Replace pgn (str of game) by game for all functions
+- [ ] Replace all 'reference' variable by 'value' variable for all functions (create functions if python-chess don't have)
