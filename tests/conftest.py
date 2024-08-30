@@ -4,7 +4,7 @@ from typing import List, Literal, Optional, final, override
 
 from bresse._chess import pgn_to_board
 from bresse.identifiers.base import ModelId
-from bresse.input import InputInference
+from bresse.input import Input
 from bresse.models.base import ModelCloud
 from bresse.output import Output, OutputGeneration, OutputInference
 
@@ -43,7 +43,7 @@ class FakeModel(ModelCloud):
     @final
     @override
     def _inference(
-        self, pgn_prompt: str, config: InputInference = InputInference()
+        self, pgn_prompt: str, config: Input = Input()
     ) -> Output:
         input_tokens = len(pgn_prompt)
         output_tokens = 3

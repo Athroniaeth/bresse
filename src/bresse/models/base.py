@@ -1,14 +1,14 @@
 import io
 from abc import ABC, abstractmethod
 from dataclasses import dataclass
-from typing import List, Union, final
+from typing import List, Tuple, Union, final
 
 import chess.pgn
 
 from bresse._chess import game_play_san
 from bresse.identifiers.base import ModelId
-from bresse.input import InputInference
-from bresse.output import Output
+from bresse.input import Input
+from bresse.output import OutputInference, Output
 from bresse.process import preprocess_game
 
 
@@ -24,7 +24,7 @@ class Model(ABC):
 
     @abstractmethod
     def _inference(
-        self, pgn_prompt: str, config: InputInference = InputInference()
+        self, pgn_prompt: str, config: Input = Input()
     ) -> Output:
         """
         Inference of the model on any string
@@ -42,13 +42,15 @@ class Model(ABC):
         ...
 
     @final
-    def inference(self, pgn: str, config: InputInference = InputInference()) -> Output:
+    def inference(
+        self, pgn: str, config: Input = Input()
+    ) -> Output:
         """
         Inference the model on a given prompt
 
         Args:
             pgn (str): PGN string to infer
-            config (InputInference): Configuration for LLM inference
+            config (Input): Configuration for LLM inference
 
         Returns:
             Output: Output object and CounterResult object
@@ -79,7 +81,7 @@ class Model(ABC):
     def play(
         self,
         game: chess.pgn.Game,
-        config: InputInference = InputInference(),
+        config: Input = Input(),
         number: int = 1,
     ):
         """
@@ -91,7 +93,7 @@ class Model(ABC):
 
         Args:
             game (chess.pgn.Game): Game to play
-            config (InputInference): Configuration for LLM inference.
+            config (Input): Configuration for LLM inference.
             number (int, optional): Number of moves to play. Defaults to 1.
         """
         for index in range(number):

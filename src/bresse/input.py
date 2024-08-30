@@ -3,9 +3,9 @@ from typing import Dict, Optional
 
 
 @dataclass
-class InputInference:
+class Input:
     """
-    Configuration class for setting parameters for text generation inference.
+    Configuration for LLM inference parameters.
 
     Attributes:
         seed (int): Seed for the random number generator, ensuring reproducibility.
