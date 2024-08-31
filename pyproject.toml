@@ -29,3 +29,9 @@ markers = [
     "costly: tests using LLM inference for real-world testing, so these are expensive tests using API keys in the .env file.",
 ]
 addopts = "-m 'not costly' --cov=src --cov-report=term-missing --cov-report=html"
+
+[tool.coverage.report]
+exclude_also = [
+    "def __repr__",
+    "@abstractmethod",
+]

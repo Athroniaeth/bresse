@@ -1,6 +1,6 @@
 import chess.pgn
 import pytest
-from conftest import load_path_pgn
+from tests.conftest import load_path_pgn
 
 from bresse import game_play_san, generate_pgn, get_child_node, pgn_to_board
 
