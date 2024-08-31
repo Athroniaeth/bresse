@@ -64,3 +64,18 @@ poetry add --group dev <dependency>
 │   ├── __main__.py   # The entry point of the project
 └── tests             # The tests folder (pytest)
 ```
+
+## Tests
+
+To run the tests, use the following command:
+
+```bash
+pytest
+```
+
+There are test who tests user cases, this tests use real inference of LLM and will use your .env file to get the API key.
+This tests cost money and is disabled per default, so be careful when running them.
+
+```bash
+pytest -m "costly or not costly"
+```
