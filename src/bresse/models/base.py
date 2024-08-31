@@ -1,14 +1,14 @@
 import io
 from abc import ABC, abstractmethod
 from dataclasses import dataclass
-from typing import List, Tuple, Union, final
+from typing import List, Union, final
 
 import chess.pgn
 
 from bresse._chess import game_play_san
 from bresse.identifiers.base import ModelId
 from bresse.input import Input
-from bresse.output import OutputInference, Output
+from bresse.output import Output
 from bresse.process import preprocess_game
 
 
@@ -23,9 +23,7 @@ class Model(ABC):
     list_models: List[ModelId] = []
 
     @abstractmethod
-    def _inference(
-        self, pgn_prompt: str, config: Input = Input()
-    ) -> Output:
+    def _inference(self, pgn_prompt: str, config: Input = Input()) -> Output:
         """
         Inference of the model on any string
 
@@ -42,9 +40,7 @@ class Model(ABC):
         ...
 
     @final
-    def inference(
-        self, pgn: str, config: Input = Input()
-    ) -> Output:
+    def inference(self, pgn: str, config: Input = Input()) -> Output:
         """
         Inference the model on a given prompt
 

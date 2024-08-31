@@ -54,4 +54,6 @@ def test_model_play():
     )
 
     model.play(game, input_)
-    assert game.variations[0].move == chess.Move.from_uci("a2a4"), "Move could not be played"
+    assert game.variations[0].move == chess.Move.from_uci(
+        "a2a4"
+    ), "Move could not be played"

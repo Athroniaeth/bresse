@@ -7,7 +7,7 @@ from bresse.identifiers.base import ModelId
 from bresse.identifiers.openai import GPT35Turbo
 from bresse.input import Input
 from bresse.models.base import ModelCloud
-from bresse.output import OutputInference, Output, OutputGeneration
+from bresse.output import Output, OutputGeneration, OutputInference
 
 AVAILABLE_MODELS = Literal["gpt-3.5-turbo-instruct",]
 
@@ -26,11 +26,7 @@ class OpenAIModel(ModelCloud):
 
     @final
     @override
-    def _inference(
-            self,
-            pgn_prompt: str,
-            config: Input = Input()
-    ) -> Output:
+    def _inference(self, pgn_prompt: str, config: Input = Input()) -> Output:
         completion = self.client.completions.create(
             model=self.model.id,
             prompt=pgn_prompt,
@@ -61,9 +57,6 @@ class OpenAIModel(ModelCloud):
         list_san = [choice.text for choice in completion.choices]
         output_gen = OutputGeneration.from_inference(board=board, list_san=list_san)
 
-        output = Output.from_outputs(
-            output_inf=output_inf,
-            output_gen=output_gen
-        )
+        output = Output.from_outputs(output_inf=output_inf, output_gen=output_gen)
 
         return output

@@ -3,8 +3,7 @@ from collections import Counter
 import pytest
 
 from bresse.identifiers.base import ModelId
-from bresse.output import OutputGeneration
-from bresse.output import OutputInference
+from bresse.output import OutputGeneration, OutputInference
 
 model_id = ModelId(
     id="gpt-3.5-turbo-instruct",
@@ -37,6 +36,7 @@ def test_output_avg_outputs_tokens():
 
 
 def test_output_gen_init_error():
+    """Test OutputGeneration init with error."""
     output = OutputGeneration(
         counter=Counter(),
         list_result=[],
