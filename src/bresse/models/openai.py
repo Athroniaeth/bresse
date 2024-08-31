@@ -19,7 +19,7 @@ class OpenAIModel(ModelCloud):
 
     def __init__(self, model_id: AVAILABLE_MODELS, api_key: str):
         # Check if model_id is available
-        super().__init__(model_id)
+        super().__init__(model_id, api_key)
 
         # Initialize OpenAI client
         self.client = OpenAI(api_key=api_key)

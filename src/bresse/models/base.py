@@ -20,7 +20,27 @@ class Model(ABC):
         list_models (List[ModelId]): List of models available for this class
     """
 
+    model: ModelId
     list_models: List[ModelId] = []
+
+    def __init__(self, model_id: Union[str, ModelId]):
+        # Todo : Transform to Switch Pattern
+        if not self.list_models:
+            raise ValueError("No models defined for this class.")
+
+        if isinstance(model_id, str):
+            self.model = self._get_identifier_str(model_id)
+
+        elif isinstance(model_id, ModelId):
+            # Todo : Set this in method like get_identifier_id
+            if model_id not in self.list_models:
+                raise ValueError(
+                    f"Model '{model_id.id}' is not available in '{self.__class__.__name__}'"
+                )
+            self.model = model_id
+
+        else:
+            raise TypeError("Model must be either a string or a ModelId instance.")
 
     @abstractmethod
     def _inference(self, pgn_prompt: str, config: Input = Input()) -> Output:
@@ -103,28 +123,10 @@ class Model(ABC):
 class ModelCloud(Model, ABC):
     """
     Base class for all LLM models using cloud services (OpenAI, Mistral, etc.).
-
-    Attributes:
-        model (ModelId): Model identifier chosen for inference
     """
 
-    model: ModelId
+    def __init__(self, model_id: Union[str, ModelId], api_key: str):
+        super().__init__(model_id=model_id)
 
-    def __init__(self, model_id: Union[str, ModelId]):
-        # Todo : Transform to Switch Pattern
-        if not self.list_models:
-            raise ValueError("No models defined for this class.")
-
-        if isinstance(model_id, str):
-            self.model = self._get_identifier_str(model_id)
-
-        elif isinstance(model_id, ModelId):
-            # Todo : Set this in method like get_identifier_id
-            if model_id not in self.list_models:
-                raise ValueError(
-                    f"Model '{model_id.id}' is not available in '{self.__class__.__name__}'"
-                )
-            self.model = model_id
-
-        else:
-            raise TypeError("Model must be either a string or a ModelId instance.")
+        if not api_key:
+            raise ValueError("API key is required for cloud models.")

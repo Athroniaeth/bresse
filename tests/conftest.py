@@ -5,7 +5,7 @@ from typing import List, Literal, Optional, final, override
 from bresse._chess import pgn_to_board
 from bresse.identifiers.base import ModelId
 from bresse.input import Input
-from bresse.models.base import ModelCloud
+from bresse.models.base import Model
 from bresse.output import Output, OutputGeneration, OutputInference
 
 # Path to the "data" directory
@@ -22,7 +22,7 @@ class FakeModelId(ModelId):
     output_cost_million: int = 6
 
 
-class FakeModel(ModelCloud):
+class FakeModel(Model):
     """Fake Model class for inference."""
 
     list_models: List[ModelId] = [FakeModelId()]
