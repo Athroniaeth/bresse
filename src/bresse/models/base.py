@@ -1,4 +1,3 @@
-import io
 from abc import ABC, abstractmethod
 from dataclasses import dataclass
 from typing import List, Union, final
@@ -60,26 +59,21 @@ class Model(ABC):
         ...
 
     @final
-    def inference(self, pgn: str, config: Input = Input()) -> Output:
+    def inference(self, game: chess.pgn.Game, input_: Input = Input()) -> Output:
         """
         Inference the model on a given prompt
 
         Args:
-            pgn (str): PGN string to infer
-            config (Input): Configuration for LLM inference
+            game (str): PGN string to infer
+            input_ (Input): Configuration for LLM inference
 
         Returns:
             Output: Output object and CounterResult object
         """
-        io_pgn = io.StringIO(pgn)
-
-        # Check if pgn is a valid chess game
-        game = chess.pgn.read_game(io_pgn)
-
         # Reduce inputs tokens for generate san
         prompt_pgn = preprocess_game(game)
 
-        return self._inference(prompt_pgn, config)
+        return self._inference(prompt_pgn, input_)
 
     def _get_identifier_str(self, model_id: str) -> ModelId:
         """Found the ModelId from id attributes."""
@@ -110,7 +104,7 @@ class Model(ABC):
             game (chess.pgn.Game): Game to play
             config (Input): Configuration for LLM inference.
         """
-        output = self.inference(pgn=f"{game}", config=config)
+        output = self.inference(game=game, input_=config)
         san = output.most_common
 
         # Play the move in the game

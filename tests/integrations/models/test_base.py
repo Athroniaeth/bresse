@@ -1,5 +1,6 @@
 from pathlib import Path
 
+import chess.pgn
 import pytest
 
 from bresse.output import Output
@@ -8,10 +9,13 @@ from tests.conftest import FakeModel, load_path_pgn
 
 @pytest.mark.parametrize("path_pgn", load_path_pgn())
 def test_models_inference(path_pgn: Path) -> None:
-    pgn = path_pgn.read_text()
+    """Test the inference method of the model."""
+    with path_pgn.open() as pgn_file:
+        game = chess.pgn.read_game(pgn_file)
+
     model = FakeModel(model_id="gpt-3.5-turbo-instruct")
 
-    output = model.inference(pgn)
+    output = model.inference(game)
 
     assert isinstance(output, Output)
     assert output.model_id == model.model

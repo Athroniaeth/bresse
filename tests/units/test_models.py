@@ -6,6 +6,7 @@ from tests.conftest import FakeModel, FakeModelId
 
 
 def test_model_list_models_empty():
+    """Test the list_models attribute with an empty list."""
     model_id = "gpt-3.5-turbo-instruct"
 
     class FakeModelEmpty(FakeModel):
@@ -16,14 +17,15 @@ def test_model_list_models_empty():
 
 
 def test_model_id():
+    """Test the model_id attribute with a string."""
     model_id = FakeModelId("gpt-3.5-turbo-instruct")
-
     model = FakeModel(model_id=model_id)  # type: ignore
 
     assert model.model == model_id
 
 
 def test_model_id_not_exist_str():
+    """Test the model_id attribute with a non-existing string."""
     model_id = "dont_exist"
 
     with pytest.raises(ValueError):
@@ -31,6 +33,7 @@ def test_model_id_not_exist_str():
 
 
 def test_model_id_not_exist_class():
+    """Test the model_id attribute with a non-existing class."""
     model_id = FakeModelId(id="dont_exist")
 
     with pytest.raises(ValueError):
@@ -38,6 +41,7 @@ def test_model_id_not_exist_class():
 
 
 def test_model_id_bad_type():
+    """Test the model_id attribute with a bad type."""
     model_id = 42
 
     with pytest.raises(TypeError):
@@ -45,6 +49,7 @@ def test_model_id_bad_type():
 
 
 def test_model_play():
+    """Test the play method of the model."""
     game = chess.pgn.Game()
 
     input_ = Input(n=1)
