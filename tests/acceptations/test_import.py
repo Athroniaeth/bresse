@@ -1,6 +1,6 @@
 """Module for testing the import command (if break, change minor version)."""
 
-import importlib
+import importlib.util
 
 
 def test_open_ai_model():
@@ -45,6 +45,16 @@ def test_get_child_node():
     """Test if user can import 'get_child_node' as usual."""
     try:
         importlib.util.find_spec("bresse._chess get_child_node")
+    except ImportError:
+        assert (
+            False
+        ), "Can't import get_child_node with 'from bresse._chess import get_child_node'"
+
+
+def test_find_model():
+    """Test if user can import 'get_child_node' as usual."""
+    try:
+        importlib.util.find_spec("bresse find_model")
     except ImportError:
         assert (
             False
