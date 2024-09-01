@@ -21,7 +21,7 @@ def test_model_id():
     model_id = FakeModelId("gpt-3.5-turbo-instruct")
     model = FakeModel(model_id=model_id)  # type: ignore
 
-    assert model.model == model_id
+    assert model.model_id == model_id
 
 
 def test_model_id_not_exist_str():

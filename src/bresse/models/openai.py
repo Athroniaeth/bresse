@@ -28,7 +28,7 @@ class OpenAIModel(ModelCloud):
     @override
     def _inference(self, pgn_prompt: str, config: Input = Input()) -> Output:
         completion = self.client.completions.create(
-            model=self.model.id,
+            model=self.model_id.id,
             prompt=pgn_prompt,
             stop=["\n", "#", "1-0", "0-1"],  # '1/2-1/2' is not a valid stop token
             seed=config.seed,
@@ -47,7 +47,7 @@ class OpenAIModel(ModelCloud):
         output_tokens = completion.usage.completion_tokens
 
         output_inf = OutputInference(
-            model_id=self.model,
+            model_id=self.model_id,
             number_requests=1,
             inputs_tokens=input_tokens,
             outputs_tokens=output_tokens,

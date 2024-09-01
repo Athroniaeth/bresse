@@ -1,7 +1,7 @@
 from typing import Optional, Type
 
 from bresse.identifiers.base import ModelId
-from bresse.models.base import Model, ModelCloud
+from bresse.models.base import Model, ModelCloud, ModelOnline
 
 
 def _find_model_id(model_id: str) -> Type[ModelId]:
@@ -42,10 +42,11 @@ def find_model(model_id: str, api_key: Optional[str] = None) -> Model:
         result = next(generator, None)
 
         if result is not None:
-            if issubclass(result, ModelCloud):
+            if issubclass(result, ModelOnline):
                 return result(model_id=model_id, api_key=api_key)
 
             if issubclass(result, Model):
+                result: Type[Model]
                 return result(model_id=model_id)
 
     raise ValueError(f"Model with ModelId '{identifier}' not found.")

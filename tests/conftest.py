@@ -5,7 +5,7 @@ from typing import List, Literal, Optional, final, override
 from bresse._chess import pgn_to_board
 from bresse.identifiers.base import ModelId
 from bresse.input import Input
-from bresse.models.base import Model
+from bresse.models.base import ModelCloud
 from bresse.output import Output, OutputGeneration, OutputInference
 
 # Path to the "data" directory
@@ -22,7 +22,7 @@ class FakeModelId(ModelId):
     output_cost_million: int = 6
 
 
-class FakeModel(Model):
+class FakeModel(ModelCloud):
     """Fake Model class for inference."""
 
     list_models: List[ModelId] = [FakeModelId()]
@@ -33,7 +33,7 @@ class FakeModel(Model):
         list_san: Optional[List[str]] = None,
     ):
         # Check if model_id is available
-        super().__init__(model_id)
+        super().__init__(model_id, api_key="api_key")
 
         if list_san is None:
             list_san = ["e4", "e5", "Nf3", "Nc6", "Bc4", "Bc5", "Ka1"]
@@ -47,7 +47,7 @@ class FakeModel(Model):
         output_tokens = 3
 
         output_inf = OutputInference(
-            model_id=self.model,
+            model_id=self.model_id,
             number_requests=1,
             inputs_tokens=input_tokens,
             outputs_tokens=output_tokens,

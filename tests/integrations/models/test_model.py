@@ -27,7 +27,7 @@ def test_models_inference(path_pgn: Path) -> None:
     output = model.inference(game)
 
     assert isinstance(output, Output)
-    assert output.model_id == model.model
+    assert output.model_id == model.model_id
 
     assert output.number_requests == 1
     # assert output.inputs_tokens == ... # Depends on the PGN

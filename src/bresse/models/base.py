@@ -11,35 +11,13 @@ from bresse.output import Output
 from bresse.process import preprocess_game
 
 
+@dataclass
 class Model(ABC):
     """
     Base class for all LLM models.
-
-    Attributes:
-        list_models (List[ModelId]): List of models available for this class
     """
 
-    model: ModelId
-    list_models: List[ModelId] = []
-
-    def __init__(self, model_id: Union[str, ModelId]):
-        # Todo : Transform to Switch Pattern
-        if not self.list_models:
-            raise ValueError("No models defined for this class.")
-
-        if isinstance(model_id, str):
-            self.model = self._get_identifier_str(model_id)
-
-        elif isinstance(model_id, ModelId):
-            # Todo : Set this in method like get_identifier_id
-            if model_id not in self.list_models:
-                raise ValueError(
-                    f"Model '{model_id.id}' is not available in '{self.__class__.__name__}'"
-                )
-            self.model = model_id
-
-        else:
-            raise TypeError("Model must be either a string or a ModelId instance.")
+    model_id: ModelId
 
     @abstractmethod
     def _inference(self, pgn_prompt: str, config: Input = Input()) -> Output:
@@ -75,19 +53,7 @@ class Model(ABC):
 
         return self._inference(prompt_pgn, input_)
 
-    def _get_identifier_str(self, model_id: str) -> ModelId:
-        """Found the ModelId from id attributes."""
-        generator = filter(lambda x: x.id == model_id, self.list_models)
-        found_model = next(generator, None)
-
-        if found_model is None:
-            available_models = ", ".join(m.id for m in self.list_models)
-            raise ValueError(
-                f"Model '{model_id}' does not exist. Available models: {available_models}"
-            )
-
-        return found_model
-
+    @final
     def play(
         self,
         game: chess.pgn.Game,
@@ -113,14 +79,69 @@ class Model(ABC):
         return output
 
 
-@dataclass
-class ModelCloud(Model, ABC):
+class ModelOnline(Model, ABC):
     """
-    Base class for all LLM models using cloud services (OpenAI, Mistral, etc.).
+    Base class for all LLM available online (HuggingFace Hub, OpenAI, Mistral, etc.).
     """
+
+    model_id: ModelId
 
     def __init__(self, model_id: Union[str, ModelId], api_key: str):
-        super().__init__(model_id=model_id)
-
         if not api_key:
             raise ValueError("API key is required for cloud models.")
+
+        # If identifier is a string, that model is free (hf_hub, etc.)
+        if isinstance(model_id, str):
+            model_id = ModelId(id=model_id, input_cost_million=0, output_cost_million=0)
+
+        super().__init__(model_id=model_id)
+
+
+class ModelCloud(ModelOnline, ABC):
+    """
+    Base class for all LLM models using cloud services (OpenAI, Mistral, etc.).
+
+    Notes:
+        The difference with ModelOnline is that ModelCloud
+        have limited and deterministic list of models available.
+    """
+
+    list_models: List[ModelId] = []
+
+    def __init__(self, model_id: Union[str, ModelId], api_key: str):
+        # Todo : Transform to Switch Pattern
+        if not self.list_models:
+            raise ValueError("No models defined for this class.")
+
+        if isinstance(model_id, str):
+            model_id = self._get_identifier_str(model_id)
+
+        elif isinstance(model_id, ModelId):
+            # Todo : Set this in method like get_identifier_id
+            model_id = self._get_identifier_model_id(model_id)
+
+        else:
+            raise TypeError("Model must be either a string or a ModelId instance.")
+
+        super().__init__(model_id=model_id, api_key=api_key)
+
+    def _get_identifier_str(self, model_id: str) -> ModelId:
+        """Found the ModelId from id attributes and validate it."""
+        generator = filter(lambda x: x.id == model_id, self.list_models)
+        found_model = next(generator, None)
+
+        if found_model is None:
+            available_models = ", ".join(m.id for m in self.list_models)
+            raise ValueError(
+                f"Model '{model_id}' does not exist. Available models: {available_models}"
+            )
+
+        return found_model
+
+    def _get_identifier_model_id(self, model_id: ModelId) -> ModelId:
+        """Validate the ModelId instance is available."""
+        if model_id not in self.list_models:
+            raise ValueError(
+                f"Model '{model_id.id}' is not available in '{self.__class__.__name__}'"
+            )
+        return model_id
