@@ -3,7 +3,7 @@ from typing import final, override
 from huggingface_hub import InferenceClient
 
 from bresse._chess import pgn_to_board
-from bresse.input import Input
+from bresse.input import ConfigInference
 from bresse.models.base import ModelOnline
 from bresse.output import Output, OutputGeneration, OutputInference
 
@@ -20,7 +20,9 @@ class HuggingFaceModel(ModelOnline):
 
     @final
     @override
-    def _inference(self, pgn_prompt: str, config: Input = Input()) -> Output:
+    def _inference(
+        self, pgn_prompt: str, config: ConfigInference = ConfigInference()
+    ) -> Output:
         list_san = []
         input_tokens = 0
         output_tokens = 0

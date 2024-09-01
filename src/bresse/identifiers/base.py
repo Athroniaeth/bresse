@@ -17,4 +17,4 @@ class ModelId:
     output_cost_million: int
 
     def __repr__(self):
-        return f"{self.id}"
+        return f"Model('{self.id}')"

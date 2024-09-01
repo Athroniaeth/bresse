@@ -20,14 +20,14 @@ def preprocess_game(game: chess.pgn.Game):
     length_result = len(game.headers["Result"])
     str_game = str_game[:-length_result]
 
-    # If trait is for White, need to add number of move
-    # Allow to add number without intervention of LLM
+    """If trait is for White, need to add number of move
+    Allow to add number without intervention of LLM"""
     if trait:
         count_move = length_moves // 2 + 1
 
-        # Note: Don't add space after number, LLM have better result
-        # if he can set by himself the space (first black move give always '1...', idk why)
-        # set strip at end because chess library set space at end with black trait
+        """Note: Don't add space after number, LLM have better result
+        if he can set by himself the space (first black move give always '1...', idk why)
+        set strip at end because chess library set space at end with black trait"""
         str_game += f"{count_move}."
 
     return str_game.strip()

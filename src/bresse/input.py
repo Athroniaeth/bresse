@@ -3,7 +3,7 @@ from typing import Dict, Optional
 
 
 @dataclass
-class Input:
+class ConfigInference:
     """
     Configuration for LLM inference parameters.
 

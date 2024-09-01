@@ -1,7 +1,7 @@
 import chess.pgn
 import pytest
 
-from bresse.input import Input
+from bresse.input import ConfigInference
 from tests.conftest import FakeModel, FakeModelId
 
 
@@ -52,7 +52,7 @@ def test_model_play():
     """Test the play method of the model."""
     game = chess.pgn.Game()
 
-    input_ = Input(n=1)
+    input_ = ConfigInference(n=1)
     model = FakeModel(
         model_id="gpt-3.5-turbo-instruct",
         list_san=["a4"],

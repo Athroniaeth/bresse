@@ -6,7 +6,8 @@ import pytest
 
 
 @pytest.mark.parametrize(
-    "class_name", ["OpenAIModel", "HuggingFaceModel"],
+    "class_name",
+    ["OpenAIModel", "HuggingFaceModel"],
 )
 def test_models_import(class_name):
     """Test if user can import models as usual."""

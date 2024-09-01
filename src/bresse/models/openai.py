@@ -5,7 +5,7 @@ from openai import OpenAI
 from bresse._chess import pgn_to_board
 from bresse.identifiers.base import ModelId
 from bresse.identifiers.openai import GPT35Turbo
-from bresse.input import Input
+from bresse.input import ConfigInference
 from bresse.models.base import ModelCloud
 from bresse.output import Output, OutputGeneration, OutputInference
 
@@ -26,7 +26,9 @@ class OpenAIModel(ModelCloud):
 
     @final
     @override
-    def _inference(self, pgn_prompt: str, config: Input = Input()) -> Output:
+    def _inference(
+        self, pgn_prompt: str, config: ConfigInference = ConfigInference()
+    ) -> Output:
         completion = self.client.completions.create(
             model=self.model_id.id,
             prompt=pgn_prompt,

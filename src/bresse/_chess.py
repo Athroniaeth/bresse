@@ -1,10 +1,10 @@
 from io import StringIO
-from typing import Literal, Optional, Union
+from typing import Literal, Optional
 
 import chess.pgn
 
 
-def pgn_to_board(pgn: str):
+def pgn_to_board(pgn: str) -> chess.Board:
     """Get chess.Board from PGN string."""
     io_pgn = StringIO(pgn)
     game = chess.pgn.read_game(io_pgn)
@@ -24,9 +24,7 @@ def pgn_to_board(pgn: str):
     return board
 
 
-def get_child_node(
-    node: Union[chess.pgn.Game, chess.pgn.ChildNode],
-) -> chess.pgn.ChildNode:
+def get_child_node(node: chess.pgn.GameNode) -> chess.pgn.GameNode:
     """Get the last variation of game node."""
     if node.variations:
         last_node = node.variations[-1]
@@ -35,7 +33,7 @@ def get_child_node(
     return node
 
 
-def game_play_san(game: chess.pgn.Game, san: str):
+def game_play_san(game: chess.pgn.Game, san: str) -> None:
     """
     Play a move in a chess game.
 

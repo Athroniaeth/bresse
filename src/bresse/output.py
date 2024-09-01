@@ -18,7 +18,6 @@ class Result:
     exception: Optional[InvalidMoveError]
 
 
-@dataclass
 class OutputInference:
     """
     Output of LLM Inference.
@@ -40,8 +39,20 @@ class OutputInference:
     inputs_tokens: int
     outputs_tokens: int
 
+    def __init__(
+        self,
+        model_id: ModelId,
+        number_requests: int,
+        inputs_tokens: int,
+        outputs_tokens: int,
+    ):
+        self.model_id = model_id
+        self.number_requests = number_requests
+        self.inputs_tokens = inputs_tokens
+        self.outputs_tokens = outputs_tokens
+
     @property
-    def cost(self):
+    def cost(self) -> float:
         """Return the cost of the inference in $"""
         cost_input = self.inputs_tokens * self.model_id.input_cost_million
         cost_output = self.outputs_tokens * self.model_id.output_cost_million
@@ -49,17 +60,16 @@ class OutputInference:
         return calcul
 
     @property
-    def number_requests_per_dollar(self):
+    def number_requests_per_dollar(self) -> float:
         """Return the number of requests available for 1$"""
         return 1 / self.cost
 
     @property
-    def avg_outputs_tokens(self):
+    def avg_outputs_tokens(self) -> float:
         """Return the average number of tokens for output"""
         return self.outputs_tokens / self.number_requests
 
 
-@dataclass
 class OutputGeneration:
     """
     Stock and count a list of result (LLM generation).
@@ -71,6 +81,10 @@ class OutputGeneration:
 
     counter: Counter
     list_result: List[Result]
+
+    def __init__(self, counter: Counter, list_result: List[Result]):
+        self.counter = counter
+        self.list_result = list_result
 
     @property
     def most_common(self) -> str:

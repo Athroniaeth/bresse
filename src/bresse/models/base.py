@@ -1,17 +1,15 @@
 from abc import ABC, abstractmethod
-from dataclasses import dataclass
 from typing import List, Union, final
 
 import chess.pgn
 
 from bresse._chess import game_play_san
 from bresse.identifiers.base import ModelId
-from bresse.input import Input
+from bresse.input import ConfigInference
 from bresse.output import Output
 from bresse.process import preprocess_game
 
 
-@dataclass
 class Model(ABC):
     """
     Base class for all LLM models.
@@ -19,8 +17,16 @@ class Model(ABC):
 
     model_id: ModelId
 
+    def __init__(self, model_id: ModelId):
+        """Create '__init__' method for type hinting."""
+        if not isinstance(model_id, ModelId):
+            raise TypeError("model_id must be a ModelId instance.")
+        self.model_id = model_id
+
     @abstractmethod
-    def _inference(self, pgn_prompt: str, config: Input = Input()) -> Output:
+    def _inference(
+        self, pgn_prompt: str, config: ConfigInference = ConfigInference()
+    ) -> Output:
         """
         Inference of the model on any string
 
@@ -29,7 +35,7 @@ class Model(ABC):
             This method can be call by user but don't have preprocessing
 
         Args:
-            pgn_prompt (str): PGN string to infer
+            pgn_prompt (str): PGN string to infer (preprocess)
 
         Returns:
             Output: Output object and CounterResult object
@@ -37,13 +43,15 @@ class Model(ABC):
         ...
 
     @final
-    def inference(self, game: chess.pgn.Game, input_: Input = Input()) -> Output:
+    def inference(
+        self, game: chess.pgn.Game, input_: ConfigInference = ConfigInference()
+    ) -> Output:
         """
         Inference the model on a given prompt
 
         Args:
             game (str): PGN string to infer
-            input_ (Input): Configuration for LLM inference
+            input_ (ConfigInference): Configuration for LLM inference
 
         Returns:
             Output: Output object and CounterResult object
@@ -57,7 +65,7 @@ class Model(ABC):
     def play(
         self,
         game: chess.pgn.Game,
-        config: Input = Input(),
+        config: ConfigInference = ConfigInference(),
     ) -> Output:
         """
         Play a chess game with the model.
@@ -68,7 +76,7 @@ class Model(ABC):
 
         Args:
             game (chess.pgn.Game): Game to play
-            config (Input): Configuration for LLM inference.
+            config (ConfigInference): Configuration for LLM inference.
         """
         output = self.inference(game=game, input_=config)
         san = output.most_common
@@ -77,6 +85,12 @@ class Model(ABC):
         game_play_san(game=game, san=san)
         print(f"Model '{self}' predicts: '{san}'")
         return output
+
+    def __repr__(self):
+        return f"{self.__class__.__name__}('{self.model_id}')"
+
+    def __eq__(self, other: "Model") -> bool:
+        return self.model_id == other.model_id
 
 
 class ModelOnline(Model, ABC):

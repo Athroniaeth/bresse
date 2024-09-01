@@ -1,7 +1,7 @@
 from typing import Optional, Type
 
 from bresse.identifiers.base import ModelId
-from bresse.models.base import Model, ModelCloud, ModelOnline
+from bresse.models.base import ModelCloud
 
 
 def _find_model_id(model_id: str) -> Type[ModelId]:
@@ -15,7 +15,7 @@ def _find_model_id(model_id: str) -> Type[ModelId]:
     raise ValueError(f"ModelId with ID '{model_id}' not found.")
 
 
-def find_model(model_id: str, api_key: Optional[str] = None) -> Model:
+def find_model(model_id: str, api_key: Optional[str] = None) -> ModelCloud:
     """
     Find a model by its ModelId string.
 
@@ -28,7 +28,7 @@ def find_model(model_id: str, api_key: Optional[str] = None) -> Model:
         api_key (Optional[str]): API key for cloud models
 
     Returns:
-        Model: Model found by its ModelId string
+        ModelCloud: Model instance found
     """
     identifier = _find_model_id(model_id)
     models = (model for model in ModelCloud.__subclasses__())
@@ -41,12 +41,12 @@ def find_model(model_id: str, api_key: Optional[str] = None) -> Model:
         )
         result = next(generator, None)
 
-        if result is not None:
-            if issubclass(result, ModelOnline):
-                return result(model_id=model_id, api_key=api_key)
+        conditions = (
+            result is not None,
+            issubclass(result, ModelCloud),
+        )
 
-            if issubclass(result, Model):
-                result: Type[Model]
-                return result(model_id=model_id)
+        if all(conditions):
+            return result(model_id=model_id, api_key=api_key)
 
-    raise ValueError(f"Model with ModelId '{identifier}' not found.")
+    raise ValueError(f"ModelCloud with ModelId '{identifier}' not found.")
