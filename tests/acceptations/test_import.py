@@ -2,15 +2,20 @@
 
 import importlib.util
 
+import pytest
 
-def test_open_ai_model():
-    """Test if user can import 'OpenAIModel' as usual."""
+
+@pytest.mark.parametrize(
+    "class_name", ["OpenAIModel", "HuggingFaceModel"],
+)
+def test_models_import(class_name):
+    """Test if user can import models as usual."""
     try:
-        importlib.util.find_spec("bresse.models OpenAIModel")
+        importlib.util.find_spec(f"bresse.models {class_name}")
     except ImportError:
         assert (
             False
-        ), "Can't import OpenAIModel with 'from bresse.models import OpenAIModel'"
+        ), f"Can't import {class_name} with 'from bresse.models import {class_name}'"
 
 
 def test_generate_pgn():

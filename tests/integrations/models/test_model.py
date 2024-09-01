@@ -5,6 +5,7 @@ import chess.pgn
 import pytest
 from dotenv import load_dotenv
 
+from bresse.models.huggingface import HuggingFaceModel
 from bresse.models.openai import OpenAIModel
 from bresse.output import Output
 from tests.conftest import load_path_pgn
@@ -15,7 +16,7 @@ load_dotenv()
 
 @pytest.mark.costly
 @pytest.mark.parametrize("path_pgn", load_path_pgn())
-def test_models_inference(path_pgn: Path) -> None:
+def test_openai_inference(path_pgn: Path) -> None:
     """Test the inference method of the model."""
     with path_pgn.open() as pgn_file:
         game = chess.pgn.read_game(pgn_file)
@@ -23,6 +24,27 @@ def test_models_inference(path_pgn: Path) -> None:
     model = OpenAIModel(
         model_id="gpt-3.5-turbo-instruct",
         api_key=os.getenv("OPENAI_API_KEY"),
+    )
+    output = model.inference(game)
+
+    assert isinstance(output, Output)
+    assert output.model_id == model.model_id
+
+    assert output.number_requests == 1
+    # assert output.inputs_tokens == ... # Depends on the PGN
+    # OutputGeneration depends on Board (and therefore PGN, test only the type)
+
+
+@pytest.mark.costly
+@pytest.mark.parametrize("path_pgn", load_path_pgn())
+def test_huggingface_inference(path_pgn: Path) -> None:
+    """Test the inference method of the model."""
+    with path_pgn.open() as pgn_file:
+        game = chess.pgn.read_game(pgn_file)
+
+    model = HuggingFaceModel(
+        model_id="mistralai/Mistral-7B-Instruct-v0.3",
+        api_key=os.getenv("HUGGINGFACE_API_KEY"),
     )
     output = model.inference(game)
 
