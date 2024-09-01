@@ -7,10 +7,10 @@ readme = "README.md"
 
 [tool.poetry.dependencies]
 python = "^3.12"
-openai = "^1.42.0"
-python-dotenv = "^1.0.1"
 chess = "^1.10.0"
-
+openai = "^1.43.0"
+python-dotenv = "^1.0.1"
+huggingface-hub = "^0.24.6"
 
 [tool.poetry.group.dev.dependencies]
 ruff = "^0.6.1"
@@ -23,7 +23,7 @@ requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
 
 [tool.pytest.ini_options]
-pythonpath="src"
+pythonpath = "src"
 testpaths = "tests"
 markers = [
     "costly: tests using LLM inference for real-world testing, so these are expensive tests using API keys in the .env file.",
