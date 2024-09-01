@@ -75,11 +75,20 @@ class OutputGeneration:
     @property
     def most_common(self) -> str:
         """Return the most common SAN move."""
+        list_exception = []
         list_san_count = self.counter.most_common(1)
 
         if not list_san_count:
-            list_valid_san = [", ".join(result.san for result in self.list_result)]
-            raise ValueError(f"No valid SAN move found, all results: {list_valid_san}")
+            list_valid_san = [
+                ", ".join(result.postprocess_san for result in self.list_result)
+            ]
+            exception = ValueError(
+                f"No valid SAN move found, all inference results: {list_valid_san}"
+            )
+
+            list_exception.append(exception)
+            list_exception.extend([result.exception for result in self.list_result])
+            raise ExceptionGroup("Error in LLM generation", list_exception)
 
         return list_san_count[0][0]
 

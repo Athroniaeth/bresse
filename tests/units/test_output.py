@@ -42,5 +42,5 @@ def test_output_gen_init_error():
         list_result=[],
     )
 
-    with pytest.raises(ValueError):
+    with pytest.raises(ExceptionGroup):
         output.most_common  # noqa
