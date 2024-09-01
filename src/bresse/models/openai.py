@@ -18,7 +18,7 @@ class OpenAIModel(ModelCloud):
     list_models: List[ModelId] = [GPT35Turbo()]
 
     def __init__(self, model_id: AVAILABLE_MODELS, api_key: str):
-        # Check if model_id is available
+        # Check if model_id is available, api_key is valid
         super().__init__(model_id, api_key)
 
         # Initialize OpenAI client

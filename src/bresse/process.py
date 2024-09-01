@@ -56,4 +56,7 @@ def postprocess_result(result: str):
     result = result.replace("0-0", "O-O")
     result = result.replace("o-o", "O-O")
 
+    # Ex: ' O-O ' -> 'O-O'
+    result = result.strip()
+
     return result
