@@ -3,7 +3,7 @@ from typing import List, Union, final
 
 import chess.pgn
 
-from bresse._chess import game_play_san
+from bresse.chess_ import game_play_san
 from bresse.identifiers.base import ModelId
 from bresse.input import ConfigInference
 from bresse.output import Output

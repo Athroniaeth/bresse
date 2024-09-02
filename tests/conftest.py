@@ -2,7 +2,7 @@ from dataclasses import dataclass
 from pathlib import Path
 from typing import List, Literal, Optional, final, override
 
-from bresse._chess import pgn_to_board
+from bresse.chess_ import pgn_to_board
 from bresse.identifiers.base import ModelId
 from bresse.input import ConfigInference
 from bresse.models.base import ModelCloud

@@ -2,7 +2,7 @@ from typing import final, override
 
 from huggingface_hub import InferenceClient
 
-from bresse._chess import pgn_to_board
+from bresse.chess_ import pgn_to_board
 from bresse.input import ConfigInference
 from bresse.models.base import ModelOnline
 from bresse.output import Output, OutputGeneration, OutputInference

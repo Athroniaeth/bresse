@@ -4,7 +4,7 @@ import chess.pgn
 import pytest
 
 from bresse import game_play_san, generate_pgn, get_child_node, pgn_to_board
-from bresse._chess import generate_opening
+from bresse.chess_ import generate_opening
 from tests.conftest import load_path_pgn
 
 POLYGLOT_PATH = Path(__file__).parents[1] / "data" / "gm2600.bin"

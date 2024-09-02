@@ -2,7 +2,7 @@ from typing import List, Literal, final, override
 
 from openai import OpenAI
 
-from bresse._chess import pgn_to_board
+from bresse.chess_ import pgn_to_board
 from bresse.identifiers.base import ModelId
 from bresse.identifiers.openai import GPT35Turbo
 from bresse.input import ConfigInference

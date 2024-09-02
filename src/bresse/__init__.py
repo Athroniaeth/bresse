@@ -1,4 +1,4 @@
-from bresse._chess import (
+from bresse.chess_ import (
     game_play_san,
     generate_opening,
     generate_pgn,
