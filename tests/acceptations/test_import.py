@@ -65,3 +65,11 @@ def test_find_model():
         assert (
             False
         ), "Can't import get_child_node with 'from bresse._chess import get_child_node'"
+
+
+def test_generate_opening():
+    """Test if user can import 'generate_opening' as usual."""
+    try:
+        importlib.util.find_spec("bresse generate_opening")
+    except ImportError:
+        assert False, "Can't import generate_opening with 'from bresse._chess import generate_opening'"

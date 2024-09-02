@@ -1,7 +1,12 @@
+import contextlib
+import random
 from io import StringIO
-from typing import Literal, Optional
+from os import PathLike
+from typing import Literal, Optional, Union
 
+import chess
 import chess.pgn
+import chess.polyglot
 
 
 def pgn_to_board(pgn: str) -> chess.Board:
@@ -105,5 +110,39 @@ def generate_pgn(
             "Termination": termination,
         }
     )
+
+    return game
+
+
+def generate_opening(
+    path_polyglot: Union[str, PathLike], max_depth: int = 6, seed: Optional[int] = None
+) -> chess.pgn.Game:
+    """
+    Generate an opening game from a Polyglot opening book.
+
+    Args:
+        path_polyglot (Union[str, PathLike]): Path to the Polyglot opening book
+        max_depth (int): Maximum depth of the opening game
+        seed (Optional[int]): Seed for the random number generator
+
+    Returns:
+        chess.pgn.Game: Opening game in PGN format
+    """
+    moves = []
+    board = chess.Board()
+    game = chess.pgn.Game()
+
+    with chess.polyglot.open_reader(path_polyglot) as reader:
+        # When IndexError is raised, the game is over
+        with contextlib.suppress(IndexError):
+            for _ in range(max_depth):
+                random_ = random.Random(seed)
+                entry = reader.weighted_choice(board, random=random_)
+
+                move = entry.move
+                san_move = board.san(move)
+                game_play_san(game, san_move)
+                moves.append(san_move)
+                board.push(move)
 
     return game

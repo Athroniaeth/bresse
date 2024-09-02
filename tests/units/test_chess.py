@@ -1,8 +1,13 @@
+from pathlib import Path
+
 import chess.pgn
 import pytest
 
 from bresse import game_play_san, generate_pgn, get_child_node, pgn_to_board
+from bresse._chess import generate_opening
 from tests.conftest import load_path_pgn
+
+POLYGLOT_PATH = Path(__file__).parents[1] / "data" / "gm2600.bin"
 
 
 @pytest.mark.parametrize("path_pgn", load_path_pgn("error"))
@@ -85,3 +90,10 @@ def test_generate_pgn_base():
     assert game.variations[0].move == chess.Move.from_uci(
         "e2e4"
     ), "First move not found"
+
+
+def test_generate_opening():
+    """Test generate_opening function success to generate an opening game."""
+    game = generate_opening(POLYGLOT_PATH, seed=42)
+
+    assert isinstance(game, chess.pgn.Game), "Opening game not generated"
