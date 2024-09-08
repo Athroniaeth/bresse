@@ -22,7 +22,7 @@ class HuggingFaceModel(ModelOnline):
     @override
     def _inference(
         self, pgn_prompt: str, config: ConfigInference = ConfigInference()
-    ) -> Output:
+    ):
         list_san = []
         input_tokens = 0
         output_tokens = 0
@@ -59,9 +59,4 @@ class HuggingFaceModel(ModelOnline):
             outputs_tokens=output_tokens,
         )
 
-        board = pgn_to_board(pgn=pgn_prompt)
-        output_gen = OutputGeneration.from_inference(board=board, list_san=list_san)
-
-        output = Output.from_outputs(output_inf=output_inf, output_gen=output_gen)
-
-        return output
+        return output_inf, list_san

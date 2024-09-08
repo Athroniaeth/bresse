@@ -1,4 +1,4 @@
-from typing import List, Literal, final, override
+from typing import List, Literal, final, override, Iterator, Tuple, Iterable
 
 from openai import OpenAI
 
@@ -27,8 +27,11 @@ class OpenAIModel(ModelCloud):
     @final
     @override
     def _inference(
-        self, pgn_prompt: str, config: ConfigInference = ConfigInference()
-    ) -> Output:
+        self,
+        pgn_prompt: str,
+        config: ConfigInference = ConfigInference()
+    ):
+
         completion = self.client.completions.create(
             model=self.model_id.id,
             prompt=pgn_prompt,
@@ -55,10 +58,6 @@ class OpenAIModel(ModelCloud):
             outputs_tokens=output_tokens,
         )
 
-        board = pgn_to_board(pgn=pgn_prompt)
-        list_san = [choice.text for choice in completion.choices]
-        output_gen = OutputGeneration.from_inference(board=board, list_san=list_san)
+        list_generation = [choice.text for choice in completion.choices]
 
-        output = Output.from_outputs(output_inf=output_inf, output_gen=output_gen)
-
-        return output
+        return output_inf, list_generation

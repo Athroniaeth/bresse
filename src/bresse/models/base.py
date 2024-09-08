@@ -1,13 +1,13 @@
 from abc import ABC, abstractmethod
-from typing import List, Union, final
+from typing import List, Union, final, Tuple, Iterable, Optional, Callable
 
 import chess.pgn
 
-from bresse.chess_ import game_play_san
+from bresse.chess_ import game_play_san, pgn_to_board
 from bresse.identifiers.base import ModelId
 from bresse.input import ConfigInference
-from bresse.output import Output
-from bresse.process import preprocess_game
+from bresse.output import Output, OutputGeneration, OutputInference, Result
+from bresse.process import preprocess_game, postprocess_result
 
 
 class Model(ABC):
@@ -26,7 +26,7 @@ class Model(ABC):
     @abstractmethod
     def _inference(
         self, pgn_prompt: str, config: ConfigInference = ConfigInference()
-    ) -> Output:
+    ) -> Tuple[OutputInference, List[str]]:
         """
         Inference of the model on any string
 
@@ -38,7 +38,7 @@ class Model(ABC):
             pgn_prompt (str): PGN string to infer (preprocess)
 
         Returns:
-            Output: Output object and CounterResult object
+            Tuple[OutputInference, List[str]]: OutputInference object and list of generated SAN
         """
         ...
 
@@ -58,8 +58,18 @@ class Model(ABC):
         """
         # Reduce inputs tokens for generate san
         prompt_pgn = preprocess_game(game)
+        board = pgn_to_board(pgn=prompt_pgn)
 
-        return self._inference(prompt_pgn, input_)
+        # Inference the model
+        output_inf, list_san = self._inference(prompt_pgn, input_)
+
+        # Postprocess the output (for 1 move)
+        output_gen = OutputGeneration.from_inference(board=board, list_san=list_san)
+
+        # Merge the two outputs
+        output = Output.from_outputs(output_inf=output_inf, output_gen=output_gen)
+
+        return output
 
     @final
     def play(
@@ -85,6 +95,60 @@ class Model(ABC):
         game_play_san(game=game, san=san)
         print(f"Model '{self}' predicts: '{san}'")
         return output
+
+    def auto_play(
+            self,
+            game: chess.pgn.Game,
+            config: ConfigInference = ConfigInference(),
+            preprocess_func: Optional[Callable] = postprocess_result,
+    ) -> OutputInference:
+        """
+        Auto-Play a full chess game with the model.
+
+        Instead of making several requests with one data validation,
+        the class will make one big inference until it finishes the game.
+
+        Notes:
+            game will be modified in place by adding variations
+            play white or black depending on the number of moves played and the trait
+            there are not output for generation (handle single san move)
+
+        Args:
+            game (chess.pgn.Game): Game to play
+            config (ConfigInference): Configuration for LLM inference.
+            preprocess_func (Callable, optional): Preprocess function for each san. Defaults to None.
+        """
+        # Give enough tokens for a full game (4 tokens/avg per move)
+        config.n = 1
+        config.max_tokens = 3800
+
+        # Reduce inputs tokens for generate san
+        prompt_pgn = preprocess_game(game)
+
+        output_inf, list_san = self._inference(pgn_prompt=prompt_pgn, config=config)
+
+        text = list_san[0]
+
+        for san in text.split(' '):
+            # Skip if not san move
+            conditions = (
+                not san in ["1-0", "0-1", "1/2-1/2", "*"],
+                not san.startswith("#"),
+                not san.startswith("\n"),
+                not '.' in san,
+                not san == ""
+            )
+
+            if all(conditions):
+                san = preprocess_func(san)
+
+                try:
+                    game_play_san(game=game, san=san)
+                except ValueError as e:
+                    print(f"Error in move '{san}': {e}")
+                    break
+
+        return output_inf
 
     def __repr__(self):
         return f"{self.__class__.__name__}('{self.model_id}')"

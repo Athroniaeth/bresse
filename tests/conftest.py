@@ -44,7 +44,7 @@ class FakeModel(ModelCloud):
     @override
     def _inference(
         self, pgn_prompt: str, config: ConfigInference = ConfigInference()
-    ) -> Output:
+    ):
         input_tokens = len(pgn_prompt)
         output_tokens = 3
 
@@ -55,13 +55,7 @@ class FakeModel(ModelCloud):
             outputs_tokens=output_tokens,
         )
 
-        board = pgn_to_board(pgn=pgn_prompt)
-        output_gen = OutputGeneration.from_inference(
-            board=board, list_san=self.list_san
-        )
-
-        output = Output.from_outputs(output_gen, output_inf)
-        return output
+        return output_inf, self.list_san
 
 
 def load_path_pgn(sub_folder: Literal["error", "valid"] = "valid") -> List[Path]:
