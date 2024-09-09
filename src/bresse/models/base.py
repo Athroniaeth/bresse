@@ -1,13 +1,13 @@
 from abc import ABC, abstractmethod
-from typing import List, Union, final, Tuple, Iterable, Optional, Callable
+from typing import Callable, List, Optional, Tuple, Union, final
 
 import chess.pgn
 
 from bresse.chess_ import game_play_san, pgn_to_board
 from bresse.identifiers.base import ModelId
 from bresse.input import ConfigInference
-from bresse.output import Output, OutputGeneration, OutputInference, Result
-from bresse.process import preprocess_game, postprocess_result
+from bresse.output import Output, OutputGeneration, OutputInference
+from bresse.process import postprocess_result, preprocess_game
 
 
 class Model(ABC):
@@ -97,11 +97,11 @@ class Model(ABC):
         return output
 
     def auto_play(
-            self,
-            game: chess.pgn.Game,
-            config: ConfigInference = ConfigInference(),
-            preprocess_func: Optional[Callable] = postprocess_result,
-            max_moves: int = 150,
+        self,
+        game: chess.pgn.Game,
+        config: ConfigInference = ConfigInference(),
+        preprocess_func: Optional[Callable] = postprocess_result,
+        max_moves: int = 150,
     ) -> OutputInference:
         """
         Auto-Play a full chess game with the model.
@@ -122,7 +122,9 @@ class Model(ABC):
         """
         # Give enough tokens for a full game
         config.n = 1
-        config.max_tokens = 4 * max_moves * 2  # 4 tokens/avg per move x 120 moves x 2 players
+        config.max_tokens = (
+            4 * max_moves * 2
+        )  # 4 tokens/avg per move x 120 moves x 2 players
 
         # Reduce inputs tokens for generate san
         prompt_pgn = preprocess_game(game)
@@ -132,25 +134,25 @@ class Model(ABC):
         text = list_san[0]
 
         try:
-            for san in text.split(' ')[:max_moves * 2]:
+            for san in text.split(" ")[: max_moves * 2]:
                 # Skip if not san move
                 conditions = (
-                    not san in ["1-0", "0-1", "1/2-1/2", "*"],
+                    san not in ["1-0", "0-1", "1/2-1/2", "*"],
                     not san.startswith("#"),
                     not san.startswith("\n"),
-                    not '.' in san,
-                    not san == ""
+                    "." not in san,
+                    not san == "",
                 )
 
                 if all(conditions):
-                    san = preprocess_func(san)
+                    preprocess_san = preprocess_func(san)
 
                     try:
-                        game_play_san(game=game, san=san)
+                        game_play_san(game=game, san=preprocess_san)
                     except ValueError as e:
-                        print(f"Error in move '{san}': {e}")
+                        print(f"Error in move '{preprocess_san}': {e}")
                         break
-        except KeyboardInterrupt as exception:
+        except KeyboardInterrupt:
             ...
 
         return output_inf

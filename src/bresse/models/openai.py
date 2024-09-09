@@ -1,13 +1,12 @@
-from typing import List, Literal, final, override, Iterator, Tuple, Iterable
+from typing import List, Literal, final, override
 
 from openai import OpenAI
 
-from bresse.chess_ import pgn_to_board
 from bresse.identifiers.base import ModelId
 from bresse.identifiers.openai import GPT35Turbo
 from bresse.input import ConfigInference
 from bresse.models.base import ModelCloud
-from bresse.output import Output, OutputGeneration, OutputInference
+from bresse.output import OutputInference
 
 AVAILABLE_MODELS = Literal["gpt-3.5-turbo-instruct",]
 
@@ -26,12 +25,7 @@ class OpenAIModel(ModelCloud):
 
     @final
     @override
-    def _inference(
-        self,
-        pgn_prompt: str,
-        config: ConfigInference = ConfigInference()
-    ):
-
+    def _inference(self, pgn_prompt: str, config: ConfigInference = ConfigInference()):
         completion = self.client.completions.create(
             model=self.model_id.id,
             prompt=pgn_prompt,

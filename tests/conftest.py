@@ -6,7 +6,7 @@ from bresse.chess_ import pgn_to_board
 from bresse.identifiers.base import ModelId
 from bresse.input import ConfigInference
 from bresse.models.base import ModelCloud
-from bresse.output import Output, OutputGeneration, OutputInference
+from bresse.output import OutputInference
 
 # Path to the "data" directory
 CURRENT_FOLDER = Path(__file__).parents[0]
@@ -42,9 +42,7 @@ class FakeModel(ModelCloud):
 
     @final
     @override
-    def _inference(
-        self, pgn_prompt: str, config: ConfigInference = ConfigInference()
-    ):
+    def _inference(self, pgn_prompt: str, config: ConfigInference = ConfigInference()):
         input_tokens = len(pgn_prompt)
         output_tokens = 3
 
