@@ -35,7 +35,7 @@ class OpenAIModel(ModelCloud):
         completion = self.client.completions.create(
             model=self.model_id.id,
             prompt=pgn_prompt,
-            stop=["\n", "#", "1-0", "0-1"],  # '1/2-1/2' is not a valid stop token
+            # stop=["\n", "#", "1-0", "0-1"],  # '1/2-1/2' is not a valid stop token
             seed=config.seed,
             n=config.n,
             best_of=config.best_of,

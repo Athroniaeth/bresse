@@ -1,3 +1,4 @@
+import math
 from collections import Counter
 from dataclasses import dataclass
 from typing import Callable, Iterable, List, Optional, Self
@@ -62,7 +63,7 @@ class OutputInference:
     @property
     def number_requests_per_dollar(self) -> float:
         """Return the number of requests available for 1$"""
-        return 1 / self.cost
+        return math.trunc(1 / self.cost)
 
     @property
     def avg_outputs_tokens(self) -> float:

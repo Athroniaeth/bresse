@@ -101,6 +101,7 @@ class Model(ABC):
             game: chess.pgn.Game,
             config: ConfigInference = ConfigInference(),
             preprocess_func: Optional[Callable] = postprocess_result,
+            max_moves: int = 150,
     ) -> OutputInference:
         """
         Auto-Play a full chess game with the model.
@@ -117,10 +118,11 @@ class Model(ABC):
             game (chess.pgn.Game): Game to play
             config (ConfigInference): Configuration for LLM inference.
             preprocess_func (Callable, optional): Preprocess function for each san. Defaults to None.
+            max_moves (int, optional): Maximum number of moves to play. Defaults to 150.
         """
-        # Give enough tokens for a full game (4 tokens/avg per move)
+        # Give enough tokens for a full game
         config.n = 1
-        config.max_tokens = 3800
+        config.max_tokens = 4 * max_moves * 2  # 4 tokens/avg per move x 120 moves x 2 players
 
         # Reduce inputs tokens for generate san
         prompt_pgn = preprocess_game(game)
@@ -129,29 +131,32 @@ class Model(ABC):
 
         text = list_san[0]
 
-        for san in text.split(' '):
-            # Skip if not san move
-            conditions = (
-                not san in ["1-0", "0-1", "1/2-1/2", "*"],
-                not san.startswith("#"),
-                not san.startswith("\n"),
-                not '.' in san,
-                not san == ""
-            )
+        try:
+            for san in text.split(' ')[:max_moves * 2]:
+                # Skip if not san move
+                conditions = (
+                    not san in ["1-0", "0-1", "1/2-1/2", "*"],
+                    not san.startswith("#"),
+                    not san.startswith("\n"),
+                    not '.' in san,
+                    not san == ""
+                )
 
-            if all(conditions):
-                san = preprocess_func(san)
+                if all(conditions):
+                    san = preprocess_func(san)
 
-                try:
-                    game_play_san(game=game, san=san)
-                except ValueError as e:
-                    print(f"Error in move '{san}': {e}")
-                    break
+                    try:
+                        game_play_san(game=game, san=san)
+                    except ValueError as e:
+                        print(f"Error in move '{san}': {e}")
+                        break
+        except KeyboardInterrupt as exception:
+            ...
 
         return output_inf
 
     def __repr__(self):
-        return f"{self.__class__.__name__}('{self.model_id}')"
+        return f"{self.__class__.__name__}('{self.model_id.id}')"
 
     def __eq__(self, other: "Model") -> bool:
         return self.model_id == other.model_id

@@ -30,7 +30,7 @@ class ConfigInference:
     frequency_penalty: Optional[float] = None
 
     top_p: Optional[float] = None
-    temperature: Optional[float] = 0.3
+    temperature: Optional[float] = 0.0
 
     logprobs: Optional[int] = 0
     logit_bias: Dict[str, int] = field(default_factory=dict)
